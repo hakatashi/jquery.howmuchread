@@ -7,6 +7,27 @@
  */
 (function ($) {
   $.fn.howmuchread = function () {
+    // binary search: determine the minimum number that passes test.
+    function binarySearch(length, test) {
+      var min = 0;      // max fails + 1
+      var max = length; // min passes
+
+      while (min !== max) {
+        var mid = Math.floor((min + max) / 2);
+        var result = test(mid);
+
+        if (result) {
+          // if passes
+          max = mid;
+        } else {
+          // if fails
+          min = mid + 1;
+        }
+      }
+
+      return min;
+    }
+
     // get descending text nodes array in the order they appears
     function getTextNodes($element) {
       var ret = [];
@@ -57,10 +78,12 @@
     }
 
     function unwrapCharacter() {
-      $(this).find('span#howmuchread').contents().unwrap();
+      $this.find('span#howmuchread-wrapper').contents().unwrap();
     }
 
     var textNodes = getTextNodes($(this));
+    var offset = $(this).offset();
+    var $this = $(this);
 
     // Get total length of text
     var totalLength = 0;
@@ -69,7 +92,26 @@
     });
 
     // binary search
+    var howmuchread = binarySearch(totalLength, function (N) {
+      var i = 0;
+      do {
+        i++;
+        var result = wrapNthCharacter(N);
+        if ($('span#howmuchread-wrapper').length === 0) {
+          console.log(N);
+          continue;
+        }
+        var testOffset = $('span#howmuchread-wrapper').offset();
+        unwrapCharacter();
+      } while (typeof testOffset === 'undefined' && i < 5);
 
-    return getTextNodes($(this));
+      if (testOffset.top > offset.top) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+
+    return howmuchread;
   };
 }(jQuery));

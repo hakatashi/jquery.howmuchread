@@ -41,6 +41,24 @@
     $element.find('span#howmuchread-wrapper').contents().unwrap();
   }
 
+  // get descending text nodes array in the order they appears
+  function getTextNodes($element) {
+    var ret = [];
+
+    $element.contents().each(function () {
+      // ELEMENT_NODE
+      if (this.nodeType === 1) {
+        ret = ret.concat(getTextNodes($(this)));
+      }
+      // TEXT_NODE
+      else if (this.nodeType === 3) {
+        ret.push(this);
+      }
+    });
+
+    return ret;
+  }
+
   $.fn.howmuchread = function () {
     // binary search: determine the minimum number that passes test.
     function binarySearch(length, test) {
@@ -63,27 +81,9 @@
       return min;
     }
 
-    // get descending text nodes array in the order they appears
-    function getTextNodes($element) {
-      var ret = [];
-
-      $element.contents().each(function () {
-        // ELEMENT_NODE
-        if (this.nodeType === 1) {
-          ret = ret.concat(getTextNodes($(this)));
-        }
-        // TEXT_NODE
-        else if (this.nodeType === 3) {
-          ret.push(this);
-        }
-      });
-
-      return ret;
-    }
-
-    var textNodes = getTextNodes($(this));
-    var offset = $(this).offset();
     var $this = $(this);
+    var textNodes = getTextNodes($this);
+    var offset = $this.offset();
 
     // Get total length of text
     var totalLength = 0;
@@ -112,5 +112,17 @@
     });
 
     return howmuchread;
+  };
+
+  $.fn.readafter = function (N) {
+    var $this = $(this);
+    var textNodes = getTextNodes($this);
+    var offset = $this.offset();
+
+    wrapNthCharacter(textNodes, N);
+    var testOffset = $('span#howmuchread-wrapper').offset();
+    unwrapCharacter($this);
+
+    return $this.scrollTop($this.scrollTop() + testOffset.top - offset.top);
   };
 }(jQuery));

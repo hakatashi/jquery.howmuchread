@@ -97,13 +97,12 @@
       do {
         i++;
         var result = wrapNthCharacter(N);
-        if ($('span#howmuchread-wrapper').length === 0) {
-          console.log(N);
-          continue;
-        }
+        if ($('span#howmuchread-wrapper').length === 0) continue;
         var testOffset = $('span#howmuchread-wrapper').offset();
         unwrapCharacter();
       } while (typeof testOffset === 'undefined' && i < 5);
+
+      if (typeof testOffset === 'undefined') return false;
 
       if (testOffset.top > offset.top) {
         return true;

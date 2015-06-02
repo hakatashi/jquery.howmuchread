@@ -6,6 +6,41 @@
  * Licensed under the MIT license.
  */
 (function ($) {
+  // wrap Nth character of text with span#howmuchread-wrapper
+  function wrapNthCharacter(textNodes, N) {
+    var cnt = 0;
+    var target, position;
+
+    // calculate target and position
+    for (var i = 0; i < textNodes.length; i++) {
+      cnt += textNodes[i].nodeValue.length;
+      if (cnt > N) {
+        target = textNodes[i];
+        position = N - cnt + textNodes[i].nodeValue.length;
+        break;
+      }
+    }
+
+    if (!target) return false;
+
+    var text = target.nodeValue;
+
+    $(target).replaceWith([
+      document.createTextNode(text.slice(0, position)),
+      $('<span/>', {
+        'id': 'howmuchread-wrapper',
+        'text': text.substr(position, 1)
+      }),
+      document.createTextNode(text.slice(position + 1))
+    ]);
+
+    return true;
+  }
+
+  function unwrapCharacter($element) {
+    $element.find('span#howmuchread-wrapper').contents().unwrap();
+  }
+
   $.fn.howmuchread = function () {
     // binary search: determine the minimum number that passes test.
     function binarySearch(length, test) {
@@ -46,41 +81,6 @@
       return ret;
     }
 
-    // wrap Nth character of text with span#howmuchread-wrapper
-    function wrapNthCharacter(N) {
-      var cnt = 0;
-      var target, position;
-
-      // calculate target and position
-      for (var i = 0; i < textNodes.length; i++) {
-        cnt += textNodes[i].nodeValue.length;
-        if (cnt > N) {
-          target = textNodes[i];
-          position = N - cnt + textNodes[i].nodeValue.length;
-          break;
-        }
-      }
-
-      if (!target) return false;
-
-      var text = target.nodeValue;
-
-      $(target).replaceWith([
-        document.createTextNode(text.slice(0, position)),
-        $('<span/>', {
-          'id': 'howmuchread-wrapper',
-          'text': text.substr(position, 1)
-        }),
-        document.createTextNode(text.slice(position + 1))
-      ]);
-
-      return true;
-    }
-
-    function unwrapCharacter() {
-      $this.find('span#howmuchread-wrapper').contents().unwrap();
-    }
-
     var textNodes = getTextNodes($(this));
     var offset = $(this).offset();
     var $this = $(this);
@@ -96,10 +96,10 @@
       var i = 0;
       do {
         i++;
-        var result = wrapNthCharacter(N);
+        var result = wrapNthCharacter(textNodes, N);
         if ($('span#howmuchread-wrapper').length === 0) continue;
         var testOffset = $('span#howmuchread-wrapper').offset();
-        unwrapCharacter();
+        unwrapCharacter($this);
       } while (typeof testOffset === 'undefined' && i < 5);
 
       if (typeof testOffset === 'undefined') return false;

@@ -1,16 +1,15 @@
 {
-  "name": "howmuchread",
+  "name": "jquery.howmuchread",
   "version": "0.0.1",
-  "description": "jQuery.howmuchread",
+  "description": "Answers your fancy questions such as \"How many characters I scrolled?\"",
   "keywords": [
     "jquery-plugin"
   ],
-  "author": {
-    "name": "Koki Takahashi",
-    "email": "hakatasiloving@gmail.com",
-    "url": "https://github.com/hakatashi"
+  "author": "Koki Takahashi <hakatasiloving@gmail.com> (https://github.com/hakatashi)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hakatashi/howmuchread"
   },
-  "repository": "hakatashi/howmuchread",
   "license": "MIT",
   "scripts": {
     "test": "grunt"
@@ -27,5 +26,13 @@
     "jshint-stylish": "^1.0.0",
     "load-grunt-tasks": "^2.0.0",
     "time-grunt": "^1.0.0"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/hakatashi/howmuchread/issues"
+  },
+  "homepage": "https://github.com/hakatashi/howmuchread",
+  "directories": {
+    "test": "test"
+  },
+  "private": true
 }

@@ -1,5 +1,8 @@
 sudo: false
 language: node_js
+before_script:
+  - npm install -g bower
+  - bower install
 node_js:
   - 'iojs'
   - '0.12'

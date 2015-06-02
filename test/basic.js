@@ -69,7 +69,7 @@
     this.$markup.scrollTop(130);
     strictEqual(this.$markup.howmuchread(), 250, 'should be on line 5');
 
-    this.$markup.scrollTop(185);
+    this.$markup.scrollTop(190);
     strictEqual(this.$markup.howmuchread(), 350, 'should be on line 7');
 
     this.$markup.scrollTop(250);

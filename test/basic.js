@@ -1,7 +1,8 @@
 (function ($) {
   module('jQuery.howmuchread', {
     setup: function () {
-      this.$element = $('#howmuchread');
+      this.$element = $('#howmuchread-plain');
+      this.$markup = $('#howmuchread-markup');
     }
   });
 
@@ -56,5 +57,22 @@
       strictEqual(contents[0].nodeType, 3, 'and it\'s text node');
       strictEqual(contents[0].nodeValue, 'Hello, world! This line consists of 50 characters.', 'and the content is ok');
     });
+  });
+
+  test('works properly with markups', function () {
+    this.$markup.scrollTop(10);
+    strictEqual(this.$markup.howmuchread(), 50, 'should be on line 1');
+
+    this.$markup.scrollTop(60);
+    strictEqual(this.$markup.howmuchread(), 100, 'should be on line 2');
+
+    this.$markup.scrollTop(130);
+    strictEqual(this.$markup.howmuchread(), 250, 'should be on line 5');
+
+    this.$markup.scrollTop(185);
+    strictEqual(this.$markup.howmuchread(), 350, 'should be on line 7');
+
+    this.$markup.scrollTop(250);
+    strictEqual(this.$markup.howmuchread(), 450, 'should be on line 9');
   });
 }(jQuery));

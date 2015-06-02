@@ -16,7 +16,7 @@
          ARE TESTING A PLUGIN HERE, THIS HELPS ENSURE BEST PRACTICES. REALLY. -->
     <script>window._$ = jQuery.noConflict(true);</script>
     <style>
-      #howmuchread {
+      .howmuchread {
         width: 600px;
         height: 100px;
         margin: 0 auto;
@@ -26,11 +26,11 @@
         line-height: 30px;
       }
 
-      #howmuchread p {
+      .howmuchread p {
         margin: 0;
       }
 
-      #howmuchread p.last {
+      .howmuchread p.last {
         margin-bottom: 500px;
       }
     </style>
@@ -38,7 +38,10 @@
   <body>
     <div id="qunit"></div>
     <div id="qunit-fixture">
-      <div id="howmuchread"><!--
+
+      <!-- plain -->
+
+      <div id="howmuchread-plain" class="howmuchread"><!--
      --><p>Hello, world! This line consists of 50 characters.</p><!--
      --><p>Hello, world! This line consists of 50 characters.</p><!--
      --><p>Hello, world! This line consists of 50 characters.</p><!--
@@ -48,6 +51,21 @@
      --><p>Hello, world! This line consists of 50 characters.</p><!--
      --><p>Hello, world! This line consists of 50 characters.</p><!--
      --><p>Hello, world! This line consists of 50 characters.</p><!--
+     --><p class="last">Hello, world! This line consists of 50 characters.</p><!--
+   --></div>
+
+      <!-- markup -->
+
+      <div id="howmuchread-markup" class="howmuchread"><!--
+     --><p>Hello, world! This line <strong>consists of</strong> 50 characters.</p><!--
+     --><p>Hello, world! <em>This</em> line consists of 50 characters.</p><!--
+     --><p>Hello, world! This line consists of <small>50</small> characters.</p><!--
+     --><p>Hello, <span style="color: red;">world!</span> This line consists of 50 characters.</p><!--
+     --><p><a href=".">Hello, world!</a> This line consists of 50 characters.</p><!--
+     --><p>Hello, world! <a href=".">This line consists of <strong>50</strong> characters.</a></p><!--
+     --><p>Hello, world! This line <span style="text-transform: uppercase;">consists</span> of 50 characters.</p><!--
+     --><p><code>Hello, world!</code> This line consists of 50 characters.</p><!--
+     --><p>Hello, world! This line consists of <kbd>50</kbd> characters.</p><!--
      --><p class="last">Hello, world! This line consists of 50 characters.</p><!--
    --></div>
     </div>

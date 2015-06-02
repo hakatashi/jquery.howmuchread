@@ -23,7 +23,9 @@
       }
     }
 
-    if (!target) return false;
+    if (!target) {
+      return false;
+    }
 
     var text = target.nodeValue;
 
@@ -115,14 +117,16 @@
     // binary search
     var howmuchread = binarySearch(totalLength, function (N) {
       var i = 0;
+      var targetOffset;
+
       do {
         i++;
-        var result = wrapNthCharacter($this, N);
-        var testOffset = $('span#howmuchread-wrapper').offset();
+        wrapNthCharacter($this, N);
+        targetOffset = $('span#howmuchread-wrapper').offset();
         unwrapCharacter($this);
-      } while (typeof testOffset === 'undefined' && i < 5);
+      } while (typeof targetOffset === 'undefined' && i < 5);
 
-      if (testOffset.top > offset.top) {
+      if (targetOffset.top > offset.top) {
         return true;
       } else {
         return false;

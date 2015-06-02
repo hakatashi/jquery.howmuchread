@@ -7,9 +7,11 @@
  */
 (function ($) {
   // wrap Nth character of text with span#howmuchread-wrapper
-  function wrapNthCharacter(textNodes, N) {
+  function wrapNthCharacter($element, N) {
     var cnt = 0;
     var target, position;
+
+    var textNodes = getTextNodes($element);
 
     // calculate target and position
     for (var i = 0; i < textNodes.length; i++) {
@@ -38,7 +40,26 @@
   }
 
   function unwrapCharacter($element) {
-    $element.find('span#howmuchread-wrapper').contents().unwrap();
+    $element.find('span#howmuchread-wrapper').each(function () {
+      var prev = this.previousSibling;
+      var next = this.nextSibling;
+
+      var text = '';
+
+      if (prev && prev.nodeType === 3) {
+        text += prev.nodeValue;
+        $(prev).remove();
+      }
+
+      text += $(this).text();
+
+      if (next && next.nodeType === 3) {
+        text += next.nodeValue;
+        $(next).remove();
+      }
+
+      $(this).replaceWith(document.createTextNode(text));
+    });
   }
 
   // get descending text nodes array in the order they appears
@@ -96,13 +117,10 @@
       var i = 0;
       do {
         i++;
-        var result = wrapNthCharacter(textNodes, N);
-        if ($('span#howmuchread-wrapper').length === 0) continue;
+        var result = wrapNthCharacter($this, N);
         var testOffset = $('span#howmuchread-wrapper').offset();
         unwrapCharacter($this);
       } while (typeof testOffset === 'undefined' && i < 5);
-
-      if (typeof testOffset === 'undefined') return false;
 
       if (testOffset.top > offset.top) {
         return true;
@@ -116,10 +134,9 @@
 
   $.fn.readafter = function (N) {
     var $this = $(this);
-    var textNodes = getTextNodes($this);
     var offset = $this.offset();
 
-    wrapNthCharacter(textNodes, N);
+    wrapNthCharacter($this, N);
     var testOffset = $('span#howmuchread-wrapper').offset();
     unwrapCharacter($this);
 

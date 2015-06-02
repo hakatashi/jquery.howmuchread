@@ -1,5 +1,5 @@
 (function ($) {
-  module('jQuery#howmuchread', {
+  module('jQuery.howmuchread', {
     setup: function () {
       this.$element = $('#howmuchread');
     }
@@ -7,6 +7,7 @@
 
   test('is countable', function () {
     // default
+
     strictEqual(this.$element.howmuchread(), 0, 'should be zero when on top');
 
     // scrolled
@@ -35,7 +36,25 @@
     this.$element.scrollTop(250);
     strictEqual(this.$element.howmuchread(), 450, 'should be on line 9');
 
+    // scrolled over
+
     this.$element.scrollTop(400);
     strictEqual(this.$element.howmuchread(), 500, 'should be on line 10');
+  });
+
+  test('does not break DOM', function () {
+    // scramble
+    for (var i = 0; i < 20; i++) {
+      this.$element.scrollTop(Math.floor(Math.random() * 500)).howmuchread();
+    }
+
+    expect(30);
+
+    this.$element.find('p').each(function () {
+      var contents = $(this).contents();
+      strictEqual(contents.length, 1, 'have one child');
+      strictEqual(contents[0].nodeType, 3, 'and it\'s text node');
+      strictEqual(contents[0].nodeValue, 'Hello, world! This line consists of 50 characters.', 'and the content is ok');
+    });
   });
 }(jQuery));

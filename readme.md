@@ -1,7 +1,9 @@
-# jQuery.howmuchread
+# jQuery.howmuchread [![Build Status][travis-image]][travis-url]
 
 > Answers your fancy questions such as "How many characters I scrolled?"
 
+[travis-url]: https://travis-ci.org/hakatashi/jquery.howmuchread
+[travis-image]: https://travis-ci.org/hakatashi/jquery.howmuchread.svg?branch=master
 
 ## Getting Started
 

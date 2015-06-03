@@ -214,7 +214,17 @@
     var $this = $(this);
     var $parent = $(config.parent);
     var textNodes = getTextNodes($this);
-    var offset = $parent.offset();
+
+    var offset;
+    if ($parent.is($(window)) || $parent.is($(document))) {
+      offset = {
+        top: 0,
+        left: 0
+      };
+    } else {
+      offset = $parent.offset();
+    }
+
     offset.right = $(document).width() - offset.left - $parent.width();
     offset.bottom = $(document).height() - offset.top - $parent.height();
 
@@ -281,8 +291,17 @@
 
     var $this = $(this);
     var $parent = $(config.parent);
-    var offset = $this.offset();
     var writingMode = parseWritingMode.call(this);
+
+    var offset;
+    if ($parent.is($(window)) || $parent.is($(document))) {
+      offset = {
+        top: 0,
+        left: 0
+      };
+    } else {
+      offset = $parent.offset();
+    }
 
     wrapNthCharacter($this, N);
     var testOffset = $('span#howmuchread-wrapper').offset();
@@ -312,5 +331,5 @@
       totalLength += textNode.nodeValue.length;
     });
     return totalLength;
-  }
+  };
 }(jQuery));

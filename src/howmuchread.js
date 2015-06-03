@@ -106,7 +106,7 @@
     };
   }
 
-  $.fn.howmuchread = function () {
+  $.fn.howmuchread = function (config) {
     // binary search: determine the minimum number that passes test.
     function binarySearch(length, test) {
       var min = 0;      // max fails + 1
@@ -128,11 +128,16 @@
       return min;
     }
 
+    config = $.extend({
+      'parent': this,
+    }, config);
+
     var $this = $(this);
+    var $parent = $(config.parent);
     var textNodes = getTextNodes($this);
-    var offset = $this.offset();
-    offset.right = $(document).width() - offset.left - $this.width();
-    offset.bottom = $(document).height() - offset.top - $this.height();
+    var offset = $parent.offset();
+    offset.right = $(document).width() - offset.left - $parent.width();
+    offset.bottom = $(document).height() - offset.top - $parent.height();
 
     var writingMode = parseWritingMode.call(this);
 

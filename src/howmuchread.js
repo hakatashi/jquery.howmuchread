@@ -205,4 +205,13 @@
 
     return $this.scrollTop($this.scrollTop() + testOffset.top - offset.top);
   };
+
+  $.fn.gettotalchars = function () {
+    var textNodes = getTextNodes($(this));
+    var totalLength = 0;
+    $.each(textNodes, function (index, textNode) {
+      totalLength += textNode.nodeValue.length;
+    });
+    return totalLength;
+  }
 }(jQuery));

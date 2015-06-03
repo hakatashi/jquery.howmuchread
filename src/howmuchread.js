@@ -82,6 +82,30 @@
     return ret;
   }
 
+  function parseWritingMode() {
+    var writingMode = $(this).css('writing-mode') || $(this).css('-webkit-writing-mode') || $(this).css('-ms-writing-mode') || $(this).css('-moz-writing-mode') || $(this).get(0).style.writingMode || $(this).get(0).style.msWritingMode;
+    var vertical, horizontal, ttb, rtl;
+
+    if (writingMode === 'horizontal-tb' || writingMode === 'lr-tb' || writingMode === 'rl-tb') {
+      vertical = false;
+      horizontal = true;
+      ttb = true;
+      rtl = ($(this).css('direction') === 'rtl' || writingMode === 'rl-tb');
+    } else {
+      vertical = true;
+      horizontal = false;
+      ttb = ($(this).css('text-orientation') === 'sideways-left') ? ($(this).css('direction') === 'rtl') : ($(this).css('direction') !== 'rtl');
+      rtl = (writingMode === undefined || writingMode === 'vertical-rl' || writingMode === 'tb' || writingMode === 'tb-rl');
+    }
+
+    return {
+      'vertical': vertical,
+      'horizontal': horizontal,
+      'ttb': ttb,
+      'rtl': rtl
+    };
+  }
+
   $.fn.howmuchread = function () {
     // binary search: determine the minimum number that passes test.
     function binarySearch(length, test) {
@@ -107,6 +131,10 @@
     var $this = $(this);
     var textNodes = getTextNodes($this);
     var offset = $this.offset();
+    offset.right = $(document).width() - offset.left - $this.width();
+    offset.bottom = $(document).height() - offset.top - $this.height();
+
+    var writingMode = parseWritingMode.call(this);
 
     // Get total length of text
     var totalLength = 0;
@@ -123,13 +151,39 @@
         i++;
         wrapNthCharacter($this, N);
         targetOffset = $('span#howmuchread-wrapper').offset();
+        targetOffset.right = $(document).width() - targetOffset.left - $('span#howmuchread-wrapper').width();
+        targetOffset.bottom = $(document).height() - targetOffset.top - $('span#howmuchread-wrapper').height();
         unwrapCharacter($this);
       } while (typeof targetOffset === 'undefined' && i < 5);
 
-      if (targetOffset.top > offset.top) {
-        return true;
+      if (writingMode.horizontal) {
+        if (writingMode.ttb) {
+          if (targetOffset.top > offset.top) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          if (targetOffset.bottom < offset.bottom) {
+            return true;
+          } else {
+            return false;
+          }
+        }
       } else {
-        return false;
+        if (writingMode.rtl) {
+          if (targetOffset.right > offset.right) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          if (targetOffset.left < offset.left) {
+            return true;
+          } else {
+            return false;
+          }
+        }
       }
     });
 

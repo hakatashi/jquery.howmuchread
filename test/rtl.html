@@ -1,0 +1,65 @@
+<!doctype html>
+  <html>
+  <head>
+    <meta charset="utf-8">
+    <title>jQuery.howmuchread Test Suite</title>
+    <!-- Load local jQuery. -->
+    <script src="../bower_components/jquery/dist/jquery.js"></script>
+    <!-- Load local QUnit. -->
+    <link rel="stylesheet" href="../bower_components/qunit/qunit/qunit.css" media="screen">
+    <script src="../bower_components/qunit/qunit/qunit.js"></script>
+    <!-- Load local lib and tests. -->
+    <script src="../src/howmuchread.js"></script>
+    <script src="rtl.js"></script>
+    <!-- Removing access to jQuery and $. But it'll still be available as _$, if
+         you REALLY want to mess around with jQuery in the console. REMEMBER WE
+         ARE TESTING A PLUGIN HERE, THIS HELPS ENSURE BEST PRACTICES. REALLY. -->
+    <script>window._$ = jQuery.noConflict(true);</script>
+    <style>
+      .howmuchread {
+        width: 300px;
+        height: 20em;
+
+        writing-mode: tb-rl;
+        writing-mode: vertical-rl;
+        -o-writing-mode: vertical-rl;
+        -ms-writing-mode: tb-rl;
+        -ms-writing-mode: vertical-rl;
+        -moz-writing-mode: vertical-rl;
+        -webkit-writing-mode: vertical-rl;
+
+        font-family: 'MSGothic', 'ＭＳ ゴシック', sans-serif;
+
+        margin: 0 auto;
+
+        overflow: auto;
+
+        line-height: 30px;
+      }
+
+      .howmuchread p {
+        height: 15em;
+        margin: 0;
+        padding-left: 300px;
+
+        font-size: 18px;
+      }
+
+      .howmuchread p.last {
+        margin-bottom: 500px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture">
+
+      <!-- vertical-rl -->
+
+      <div id="howmuchread-vertical-rl" class="howmuchread"><!--
+     --><p>仏説摩訶般若波羅蜜多心経観自在菩薩行深般若波羅蜜多時照見五蘊皆空度一切苦厄舎利子色不異空空不異色色即是空空即是色受想行識亦復如是舎利子是諸法空相不生不滅不垢不浄不増不減是故空中無色無受想行識無眼耳鼻舌身意無色声香味触法無眼界乃至無意識界無無明亦無無明尽乃至無老死亦無老死尽無苦集滅道無智亦無得以無所得故菩提薩埵依般若波羅蜜多故心無罣礙無罣礙故無有恐怖遠離一切顛倒夢想究竟涅槃三世諸仏依般若波羅蜜多故得阿耨多羅三藐三菩提故知般若波羅蜜多是大神呪是大明呪是無上呪是無等等呪能除一切苦真実不虚故説般若波羅蜜多呪即説呪曰羯諦羯諦波羅羯諦波羅僧羯諦菩提薩婆訶般若心経</p><!--
+   --></div>
+
+    </div>
+  </body>
+</html>

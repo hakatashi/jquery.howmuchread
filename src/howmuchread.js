@@ -106,6 +106,85 @@
     };
   }
 
+  // scrollLeft with support for RTL
+  function scrollLeft(value) {
+    var writingMode = parseWritingMode.call(this);
+    var scrollType;
+
+    if (writingMode.rtl) {
+      if (writingMode.vertical) {
+        scrollType = rtlScrollType.vertical;
+      } else {
+        scrollType = rtlScrollType.horizontal;
+      }
+    } else {
+      scrollType = 'default';
+    }
+
+    if (typeof value === 'undefined') {
+      if (scrollType === 'default') {
+        return $(this).scrollLeft();
+      } else if (scrollType === 'negative') {
+        return $(this).scrollLeft() + $(this).width();
+      } else if (scrollType === 'reverse') {
+        return $(this).width() - $(this).scrollLeft();
+      } else {
+        return $(this).scrollLeft();
+      }
+    } else {
+      if (scrollType === 'default') {
+        return $(this).scrollLeft(value);
+      } else if (scrollType === 'negative') {
+        return $(this).scrollLeft(value - $(this).width());
+      } else if (scrollType === 'reverse') {
+        return $(this).scrollLeft($(this).width() - value);
+      } else {
+        return $(this).scrollLeft(value);
+      }
+    }
+  }
+
+  var rtlScrollType = {
+    'vertical': 'reverse',
+    'horizontal': 'reverse'
+  };
+
+  // detect rtl scroll type mode
+  $(document).ready(function () {
+    /*! jQuery RTL Scroll Type Detector | Copyright (c) 2012 Wei-Ko Kao | MIT License */
+    var definer;
+
+    // on horizontal
+    definer = $('<div dir="rtl" style="font-size: 14px; width: 1px; height: 1px; position: absolute; top: -1000px; overflow: scroll;">A</div>').appendTo('body')[0];
+    rtlScrollType.horizontal = 'reverse';
+
+    if (definer.scrollLeft > 0) {
+      rtlScrollType.horizontal = 'default';
+    } else {
+      definer.scrollLeft = 1;
+      if (definer.scrollLeft === 0) {
+        rtlScrollType.horizontal = 'negative';
+      }
+    }
+
+    $(definer).remove();
+
+    // on vertical
+    definer = $('<div style="font-size: 14px; width: 1px; height: 1px; position: absolute; top: -1000px; overflow: scroll; writing-mode: tb-rl; writing-mode: vertical-rl; -o-writing-mode: vertical-rl; -ms-writing-mode: tb-rl; -ms-writing-mode: vertical-rl; -moz-writing-mode: vertical-rl; -webkit-writing-mode: vertical-rl;">A</div>').appendTo('body')[0];
+    rtlScrollType.vertical = 'reverse';
+
+    if (definer.scrollLeft > 0) {
+      rtlScrollType.vertical = 'default';
+    } else {
+      definer.scrollLeft = 1;
+      if (definer.scrollLeft === 0) {
+        rtlScrollType.vertical = 'negative';
+      }
+    }
+
+    $(definer).remove();
+  });
+
   $.fn.howmuchread = function (config) {
     // binary search: determine the minimum number that passes test.
     function binarySearch(length, test) {
@@ -198,12 +277,27 @@
   $.fn.readafter = function (N) {
     var $this = $(this);
     var offset = $this.offset();
+    var writingMode = parseWritingMode.call(this);
 
     wrapNthCharacter($this, N);
     var testOffset = $('span#howmuchread-wrapper').offset();
+    var testHeight = $('span#howmuchread-wrapper').height();
+    var testWidth = $('span#howmuchread-wrapper').width();
     unwrapCharacter($this);
 
-    return $this.scrollTop($this.scrollTop() + testOffset.top - offset.top);
+    if (writingMode.horizontal) {
+      if (writingMode.ttb) {
+        return $this.scrollTop($this.scrollTop() + testOffset.top - offset.top);
+      } else {
+        return $this.scrollTop($this.scrollTop() + testOffset.top - offset.top - $this.height() + testHeight);
+      }
+    } else {
+      if (writingMode.rtl) {
+        return scrollLeft.call(this, scrollLeft.call(this) + testOffset.left - offset.left - $this.width() + testWidth);
+      } else {
+        return scrollLeft.call(this, scrollLeft.call(this) + testOffset.left - offset.left);
+      }
+    }
   };
 
   $.fn.gettotalchars = function () {

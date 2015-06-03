@@ -274,8 +274,13 @@
     return howmuchread;
   };
 
-  $.fn.readafter = function (N) {
+  $.fn.readafter = function (N, config) {
+    config = $.extend({
+      'parent': this,
+    }, config);
+
     var $this = $(this);
+    var $parent = $(config.parent);
     var offset = $this.offset();
     var writingMode = parseWritingMode.call(this);
 
@@ -287,15 +292,15 @@
 
     if (writingMode.horizontal) {
       if (writingMode.ttb) {
-        return $this.scrollTop($this.scrollTop() + testOffset.top - offset.top);
+        return $parent.scrollTop($parent.scrollTop() + testOffset.top - offset.top);
       } else {
-        return $this.scrollTop($this.scrollTop() + testOffset.top - offset.top - $this.height() + testHeight);
+        return $parent.scrollTop($parent.scrollTop() + testOffset.top - offset.top - $parent.height() + testHeight);
       }
     } else {
       if (writingMode.rtl) {
-        return scrollLeft.call(this, scrollLeft.call(this) + testOffset.left - offset.left - $this.width() + testWidth);
+        return scrollLeft.call(config.parent, scrollLeft.call(config.parent) + testOffset.left - offset.left - $parent.width() + testWidth);
       } else {
-        return scrollLeft.call(this, scrollLeft.call(this) + testOffset.left - offset.left);
+        return scrollLeft.call(config.parent, scrollLeft.call(config.parent) + testOffset.left - offset.left);
       }
     }
   };

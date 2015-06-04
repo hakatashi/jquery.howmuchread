@@ -108,7 +108,7 @@
 
   // scrollLeft with support for RTL
   function scrollLeft(value, writingMode) {
-    var writingMode = writingMode || parseWritingMode.call(this);
+    writingMode = writingMode || parseWritingMode.call(this);
     var scrollType;
 
     if (writingMode.rtl) {

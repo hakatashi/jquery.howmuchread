@@ -52,19 +52,14 @@ module.exports = function (grunt) {
           build: process.env.TRAVIS_JOB_ID,
           concurrency: 3,
           browsers: [
-            ['XP', 'internet explorer', 7],
             ['Vista', 'internet explorer', 8],
-            ['WIN7', 'internet explorer', 9],
             ['WIN8', 'internet explorer', 10],
             ['WIN8.1', 'internet explorer', 11],
             ['WIN7', 'firefox', ''],
-            ['linux', 'firefox', ''],
             ['WIN7', 'chrome', ''],
-            ['linux', 'chrome', ''],
-            ['OS X 10.8', 'safari', 6],
             ['OS X 10.10', 'safari', 8],
           ],
-          testname: 'jquery.howmuchreadd',
+          testname: 'jquery.howmuchread',
           tags: ['master']
         }
       }

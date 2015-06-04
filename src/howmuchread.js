@@ -216,7 +216,12 @@
     var textNodes = getTextNodes($this);
 
     var offset;
-    if ($parent.is($(window)) || $parent.is($(document))) {
+    if ($parent.is($(window))) {
+      offset = {
+        top: $(window).scrollTop(),
+        left: $(window).scrollLeft()
+      };
+    } else if ($parent.is($(document))) {
       offset = {
         top: 0,
         left: 0
@@ -294,7 +299,12 @@
     var writingMode = parseWritingMode.call(this);
 
     var offset;
-    if ($parent.is($(window)) || $parent.is($(document))) {
+    if ($parent.is($(window))) {
+      offset = {
+        top: $(window).scrollTop(),
+        left: $(window).scrollLeft()
+      };
+    } else if ($parent.is($(document))) {
       offset = {
         top: 0,
         left: 0

@@ -327,9 +327,9 @@
       }
     } else {
       if (writingMode.rtl) {
-        return scrollLeft.call(config.parent, scrollLeft.call(config.parent) + testOffset.left - offset.left - $parent.width() + testWidth, parseWritingMode.call(this));
+        return scrollLeft.call(config.parent, scrollLeft.call(config.parent, undefined, writingMode) + testOffset.left - offset.left - $parent.width() + testWidth, parseWritingMode.call(this), writingMode);
       } else {
-        return scrollLeft.call(config.parent, scrollLeft.call(config.parent) + testOffset.left - offset.left, parseWritingMode.call(this));
+        return scrollLeft.call(config.parent, scrollLeft.call(config.parent, undefined, writingMode) + testOffset.left - offset.left, parseWritingMode.call(this), writingMode);
       }
     }
   };

@@ -44,6 +44,31 @@ module.exports = function (grunt) {
         }
       }
     },
+    'saucelabs-qunit': {
+      all: {
+        options: {
+          urls: ['http://localhost:9000/test/basic.html'],
+          tunnelTimeout: 5,
+          build: process.env.TRAVIS_JOB_ID,
+          concurrency: 3,
+          browsers: [
+            ['XP', 'internet explorer', 7],
+            ['Vista', 'internet explorer', 8],
+            ['WIN7', 'internet explorer', 9],
+            ['WIN8', 'internet explorer', 10],
+            ['WIN8.1', 'internet explorer', 11],
+            ['WIN7', 'firefox', ''],
+            ['linux', 'firefox', ''],
+            ['WIN7', 'chrome', ''],
+            ['linux', 'chrome', ''],
+            ['OS X 10.8', 'safari', 6],
+            ['OS X 10.10', 'safari', 8],
+          ],
+          testname: 'jquery.howmuchreadd',
+          tags: ['master']
+        }
+      }
+    },
     jshint: {
       options: {
         reporter: require('jshint-stylish')
@@ -92,11 +117,8 @@ module.exports = function (grunt) {
   });
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'connect', 'qunit', 'clean', 'concat', 'uglify']);
-  grunt.registerTask('server', function () {
-    grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
-    grunt.task.run(['serve']);
-  });
+  grunt.registerTask('default', ['test', 'clean', 'concat', 'uglify']);
   grunt.registerTask('serve', ['connect', 'watch']);
   grunt.registerTask('test', ['jshint', 'connect', 'qunit']);
+  grunt.registerTask('saucelabs', ['jshint', 'connect', 'qunit', 'saucelabs-qunit']);
 };

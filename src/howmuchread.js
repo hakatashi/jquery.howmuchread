@@ -107,8 +107,8 @@
   }
 
   // scrollLeft with support for RTL
-  function scrollLeft(value) {
-    var writingMode = parseWritingMode.call(this);
+  function scrollLeft(value, writingMode) {
+    var writingMode = writingMode || parseWritingMode.call(this);
     var scrollType;
 
     if (writingMode.rtl) {
@@ -327,9 +327,9 @@
       }
     } else {
       if (writingMode.rtl) {
-        return scrollLeft.call(config.parent, scrollLeft.call(config.parent) + testOffset.left - offset.left - $parent.width() + testWidth);
+        return scrollLeft.call(config.parent, scrollLeft.call(config.parent) + testOffset.left - offset.left - $parent.width() + testWidth, parseWritingMode.call(this));
       } else {
-        return scrollLeft.call(config.parent, scrollLeft.call(config.parent) + testOffset.left - offset.left);
+        return scrollLeft.call(config.parent, scrollLeft.call(config.parent) + testOffset.left - offset.left, parseWritingMode.call(this));
       }
     }
   };

@@ -40,7 +40,6 @@ unwrapCharacter = ($element) ->
   return
 
 # get descending text nodes array in the order they appears
-
 getTextNodes = ($element) ->
   ret = []
   $element.contents().each ->
@@ -61,7 +60,7 @@ parseWritingMode = ->
     $(this).get(0).style.writingMode or
     $(this).get(0).style.msWritingMode
 
-  if writingMode == 'horizontal-tb' or writingMode == 'lr-tb' or writingMode == 'rl-tb'
+  if writingMode is undefined or writingMode is 'horizontal-tb' or writingMode is 'lr-tb' or writingMode is 'rl-tb'
     vertical = false
     horizontal = true
     ttb = true
@@ -168,3 +167,20 @@ $(document).ready ->
   $(definer).remove()
 
   return
+
+# binary search: determine the minimum integer that passes test.
+binarySearch = (size, test) ->
+  min = 0 # min passes
+  max = size # max fails + 1
+
+  while min != max
+    mid = Math.floor (min + max) / 2
+    result = test mid
+    if result
+      # if passes
+      max = mid
+    else
+      # if fails
+      min = mid + 1
+
+  return min

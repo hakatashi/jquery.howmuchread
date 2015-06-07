@@ -13,8 +13,13 @@ howmuchread.get = (options) ->
     borderline: 'before'
     wrapperId: 'howmuchread-wrapper'
 
-  settings = $.extend defaults, options
-  $this = $ this
+  # Extend defaults to options
+  settings = $.extend {}, defaults, options
+
+  # Parse writing-mode of parent element
+  writingMode = parseWritingMode.call this
+
+  # Get sanitized offset of parent element
   $parent = $ settings.parent
   if $parent.is $ window
     offset =
@@ -26,43 +31,73 @@ howmuchread.get = (options) ->
       left: 0
   else
     offset = $parent.offset()
-  offset.right = $(document).width() - (offset.left) - $parent.width()
-  offset.bottom = $(document).height() - (offset.top) - $parent.height()
-  writingMode = parseWritingMode.call(this)
+  offset.right = $(document).width() - offset.left - $parent.width()
+  offset.bottom = $(document).height() - offset.top - $parent.height()
+
+  # Physical offset to Logical offset
+  if writingMode.horizontal
+    if writingMode.ttb
+      offset.before = offset.top
+      offset.after = offset.bottom
+    else
+      offset.before = offset.bottom
+      offset.after = offset.top
+
+    if writingMode.rtl
+      offset.start = offset.right
+      offset.end = offset.left
+    else
+      offset.start = offset.left
+      offset.end = offset.right
+
+  else if writingMode.vertical
+    if writingMode.rtl
+      offset.before = offset.right
+      offset.after = offset.left
+    else
+      offset.before = offset.left
+      offset.after = offset.right
+
+    if writingMode.ttb
+      offset.start = offset.top
+      offset.end = offset.bottom
+    else
+      offset.start = offset.bottom
+      offset.end = offset.top
+
+  # Convert settings.borderline to numeral borderline value
+  if settings.borderline is 'before'
+    borderline = offset.before
+  else if settings.borderline is 'after'
+    borderline = offset.after
+  else if settings.borderline is 'center'
+    borderline = (offset.before + offset.after) / 2
+  else if typeof settings.borderline is 'number'
+    borderline = offset.before * (1 - settings.borderline) + offset.after * settins.borderline
+  else
+    throw new TypeError 'howmuchread: options.borderline must be string or number'
 
   # Get total length of text
   totalLength = howmuchread.getLength.call this
 
   # binary search
-  position = binarySearch totalLength, (N) ->
-    wrapNthCharacter $this, N, settings.wrapperId
+  position = binarySearch totalLength, (N) =>
+    wrapNthCharacter $(this), N, settings.wrapperId
     targetOffset = $("span##{settings.wrapperId}").offset()
     targetOffset.right = $(document).width() - (targetOffset.left) - $("span##{settings.wrapperId}").width()
     targetOffset.bottom = $(document).height() - (targetOffset.top) - $("span##{settings.wrapperId}").height()
-    unwrapCharacter $this, settings.wrapperId
+    unwrapCharacter $(this), settings.wrapperId
 
     if writingMode.horizontal
       if writingMode.ttb
-        if targetOffset.top > offset.top
-          true
-        else
-          false
+        return targetOffset.top > borderline
       else
-        if targetOffset.bottom < offset.bottom
-          true
-        else
-          false
+        return targetOffset.bottom < borderline
     else
       if writingMode.rtl
-        if targetOffset.right > offset.right
-          true
-        else
-          false
+        return targetOffset.right > borderline
       else
-        if targetOffset.left < offset.left
-          true
-        else
-          false
+        return targetOffset.left < borderline
 
   return position
 

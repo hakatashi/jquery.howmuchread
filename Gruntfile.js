@@ -16,7 +16,7 @@ module.exports = function (grunt) {
       ' Licensed MIT */\n',
     // Task configuration.
     clean: {
-      files: ['dist']
+      files: ['dist/*']
     },
     concat: {
       options: {
@@ -26,6 +26,16 @@ module.exports = function (grunt) {
       dist: {
         src: ['src/<%= pkg.name %>.js'],
         dest: 'dist/jquery.<%= pkg.name %>.js'
+      }
+    },
+    coffee: {
+      compile: {
+        options: {
+          join: true
+        },
+        files: {
+          'dist/jquery.<%= pkg.name %>.js': ['src/*.coffee']
+        }
       }
     },
     uglify: {
@@ -74,12 +84,6 @@ module.exports = function (grunt) {
         },
         src: 'Gruntfile.js'
       },
-      src: {
-        options: {
-          jshintrc: 'src/.jshintrc'
-        },
-        src: ['src/**/*.js']
-      },
       test: {
         options: {
           jshintrc: 'test/.jshintrc'
@@ -112,8 +116,9 @@ module.exports = function (grunt) {
   });
 
   // Default task.
-  grunt.registerTask('default', ['test', 'clean', 'concat', 'uglify']);
+  grunt.registerTask('default', ['build', 'test']);
+  grunt.registerTask('build', ['clean', 'coffee', 'uglify']);
   grunt.registerTask('serve', ['connect', 'watch']);
   grunt.registerTask('test', ['jshint', 'connect', 'qunit']);
-  grunt.registerTask('saucelabs', ['jshint', 'connect', 'qunit', 'saucelabs-qunit']);
+  grunt.registerTask('saucelabs', ['build', 'test', 'saucelabs-qunit']);
 };

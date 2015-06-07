@@ -1,0 +1,136 @@
+# wrap Nth character of text with span#howmuchread-wrapper
+wrapNthCharacter = ($element, N) ->
+  cnt = 0
+  target = undefined
+  position = undefined
+  textNodes = getTextNodes($element)
+  # calculate target and position
+  i = 0
+  while i < textNodes.length
+    cnt += textNodes[i].nodeValue.length
+    if cnt > N
+      target = textNodes[i]
+      position = N - cnt + textNodes[i].nodeValue.length
+      break
+    i++
+  if !target
+    return false
+  text = target.nodeValue
+  $(target).replaceWith [
+    document.createTextNode(text.slice(0, position))
+    $('<span/>',
+      'id': 'howmuchread-wrapper'
+      'text': text.substr(position, 1))
+    document.createTextNode(text.slice(position + 1))
+  ]
+  true
+
+unwrapCharacter = ($element) ->
+  $element.find('span#howmuchread-wrapper').each ->
+    prev = @previousSibling
+    next = @nextSibling
+    text = ''
+    if prev and prev.nodeType == 3
+      text += prev.nodeValue
+      $(prev).remove()
+    text += $(this).text()
+    if next and next.nodeType == 3
+      text += next.nodeValue
+      $(next).remove()
+    $(this).replaceWith document.createTextNode(text)
+    return
+  return
+
+# get descending text nodes array in the order they appears
+
+getTextNodes = ($element) ->
+  ret = []
+  $element.contents().each ->
+    # ELEMENT_NODE
+    if @nodeType == 1
+      ret = ret.concat(getTextNodes($(this)))
+    else if @nodeType == 3
+      ret.push this
+    return
+  ret
+
+parseWritingMode = ->
+  writingMode = $(this).css('writing-mode') or $(this).css('-webkit-writing-mode') or $(this).css('-ms-writing-mode') or $(this).css('-moz-writing-mode') or $(this).get(0).style.writingMode or $(this).get(0).style.msWritingMode
+  vertical = undefined
+  horizontal = undefined
+  ttb = undefined
+  rtl = undefined
+  if writingMode == 'horizontal-tb' or writingMode == 'lr-tb' or writingMode == 'rl-tb'
+    vertical = false
+    horizontal = true
+    ttb = true
+    rtl = $(this).css('direction') == 'rtl' or writingMode == 'rl-tb'
+  else
+    vertical = true
+    horizontal = false
+    ttb = if $(this).css('text-orientation') == 'sideways-left' then $(this).css('direction') == 'rtl' else $(this).css('direction') != 'rtl'
+    rtl = writingMode == undefined or writingMode == 'vertical-rl' or writingMode == 'tb' or writingMode == 'tb-rl'
+  {
+    'vertical': vertical
+    'horizontal': horizontal
+    'ttb': ttb
+    'rtl': rtl
+  }
+
+# scrollLeft with support for RTL
+
+scrollLeft = (value, writingMode) ->
+  writingMode = writingMode or parseWritingMode.call(this)
+  scrollType = undefined
+  if writingMode.rtl
+    if writingMode.vertical
+      scrollType = rtlScrollType.vertical
+    else
+      scrollType = rtlScrollType.horizontal
+  else
+    scrollType = 'default'
+  if typeof value == 'undefined'
+    if scrollType == 'default'
+      $(this).scrollLeft()
+    else if scrollType == 'negative'
+      $(this).scrollLeft() + $(this).width()
+    else if scrollType == 'reverse'
+      $(this).width() - $(this).scrollLeft()
+    else
+      $(this).scrollLeft()
+  else
+    if scrollType == 'default'
+      $(this).scrollLeft value
+    else if scrollType == 'negative'
+      $(this).scrollLeft value - $(this).width()
+    else if scrollType == 'reverse'
+      $(this).scrollLeft $(this).width() - value
+    else
+      $(this).scrollLeft value
+
+# detect rtl scroll type mode
+$(document).ready ->
+  ###! jQuery RTL Scroll Type Detector | Copyright (c) 2012 Wei-Ko Kao | MIT License ###
+
+  definer = undefined
+  # on horizontal
+  definer = $('<div dir="rtl" style="font-size: 14px; width: 1px; height: 1px; position: absolute; top: -1000px; overflow: scroll;">A</div>').appendTo('body')[0]
+  rtlScrollType.horizontal = 'reverse'
+  if definer.scrollLeft > 0
+    rtlScrollType.horizontal = 'default'
+  else
+    definer.scrollLeft = 1
+    if definer.scrollLeft == 0
+      rtlScrollType.horizontal = 'negative'
+  $(definer).remove()
+  # on vertical
+  definer = $('<div style="font-size: 14px; width: 1px; height: 1px; position: absolute; top: -1000px; overflow: scroll; writing-mode: tb-rl; writing-mode: vertical-rl; -o-writing-mode: vertical-rl; -ms-writing-mode: tb-rl; -ms-writing-mode: vertical-rl; -moz-writing-mode: vertical-rl; -webkit-writing-mode: vertical-rl;">A</div>').appendTo('body')[0]
+  rtlScrollType.vertical = 'reverse'
+  if definer.scrollLeft > 0
+    rtlScrollType.vertical = 'default'
+  else
+    definer.scrollLeft = 1
+    if definer.scrollLeft == 0
+      rtlScrollType.vertical = 'negative'
+  $(definer).remove()
+  return

@@ -1,4 +1,12 @@
-$.fn.howmuchread = (config) ->
+$.fn.howmuchread = (action) ->
+  if howmuchread[action]
+    return howmuchread[action].apply this, Array.prototype.slice.call arguments, 1
+  else
+    return howmuchread.get.apply this, arguments
+
+howmuchread = {}
+
+howmuchread.get = (config) ->
   config = $.extend parent: this, config
   $this = $ this
   $parent = $ config.parent
@@ -24,7 +32,7 @@ $.fn.howmuchread = (config) ->
     return
 
   # binary search
-  howmuchread = binarySearch totalLength, (N) ->
+  position = binarySearch totalLength, (N) ->
     i = 0
     loop
       i++
@@ -59,12 +67,13 @@ $.fn.howmuchread = (config) ->
         else
           false
 
-  return howmuchread
+  return position
 
-$.fn.readafter = (N, config) ->
+howmuchread.scrollTo = (N, config) ->
   config = $.extend parent: this, config
   $this = $ this
   $parent = $ config.parent
+  console.log this
   writingMode = parseWritingMode.call this
   if $parent.is $ window
     offset =
@@ -92,7 +101,7 @@ $.fn.readafter = (N, config) ->
     else
       scrollLeft.call config.parent, scrollLeft.call(config.parent, undefined, writingMode) + testOffset.left - (offset.left), parseWritingMode.call(this), writingMode
 
-$.fn.gettotalchars = ->
+howmuchread.getLength = ->
   textNodes = getTextNodes $ this
   totalLength = 0
   $.each textNodes, (index, textNode) ->

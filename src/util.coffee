@@ -52,23 +52,28 @@ getTextNodes = ($element) ->
   ret
 
 parseWritingMode = ->
+  if $(this).is($(window)) or $(this).is($(document))
+    $this = $ 'body'
+  else
+    $this = $(this)
+
   writingMode =
-    $(this).css('writing-mode') or
-    $(this).css('-webkit-writing-mode') or
-    $(this).css('-ms-writing-mode') or
-    $(this).css('-moz-writing-mode') or
-    $(this).get(0).style.writingMode or
-    $(this).get(0).style.msWritingMode
+    $this.css('writing-mode') or
+    $this.css('-webkit-writing-mode') or
+    $this.css('-ms-writing-mode') or
+    $this.css('-moz-writing-mode') or
+    $this.get(0).style.writingMode or
+    $this.get(0).style.msWritingMode
 
   if writingMode is undefined or writingMode is 'horizontal-tb' or writingMode is 'lr-tb' or writingMode is 'rl-tb'
     vertical = false
     horizontal = true
     ttb = true
-    rtl = $(this).css('direction') == 'rtl' or writingMode == 'rl-tb'
+    rtl = $this.css('direction') == 'rtl' or writingMode == 'rl-tb'
   else
     vertical = true
     horizontal = false
-    ttb = if $(this).css('text-orientation') == 'sideways-left' then $(this).css('direction') == 'rtl' else $(this).css('direction') != 'rtl'
+    ttb = if $this.css('text-orientation') == 'sideways-left' then $this.css('direction') == 'rtl' else $this.css('direction') != 'rtl'
     rtl = writingMode == undefined or writingMode == 'vertical-rl' or writingMode == 'tb' or writingMode == 'tb-rl'
 
   return {

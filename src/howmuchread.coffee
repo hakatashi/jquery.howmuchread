@@ -89,12 +89,12 @@ howmuchread.get = (options) ->
     unwrapCharacter $(this), settings.wrapperId
 
     if writingMode.horizontal
-      if writingMode.ttb
+      if writingMode.asc
         return targetOffset.top > borderline
       else
         return targetOffset.bottom < borderline
     else
-      if writingMode.rtl
+      if writingMode.asc
         return targetOffset.right > borderline
       else
         return targetOffset.left < borderline

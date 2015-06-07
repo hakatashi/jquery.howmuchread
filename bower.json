@@ -1,5 +1,5 @@
 {
-  "name": "howmuchread",
+  "name": "jquery.howmuchread",
   "description": "Answers your fancy questions such as \"How many characters I scrolled?\"",
   "ignore": [
     ".editorconfig",

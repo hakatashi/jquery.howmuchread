@@ -5,7 +5,7 @@
     ".editorconfig",
     ".jshintrc"
   ],
-  "version": "0.0.1",
+  "version": "0.1.0",
   "dependencies": {},
   "devDependencies": {
     "qunit": "~1.12.0",

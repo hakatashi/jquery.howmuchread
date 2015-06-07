@@ -1,6 +1,6 @@
 {
   "name": "howmuchread",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Answers your fancy questions such as \"How many characters I scrolled?\"",
   "keywords": [
     "jquery-plugin"

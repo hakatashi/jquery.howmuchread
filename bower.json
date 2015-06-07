@@ -1,5 +1,10 @@
 {
   "name": "howmuchread",
+  "description": "Answers your fancy questions such as \"How many characters I scrolled?\"",
+  "ignore": [
+    ".editorconfig",
+    ".jshintrc"
+  ],
   "version": "0.0.1",
   "dependencies": {},
   "devDependencies": {

@@ -26,16 +26,7 @@ howmuchread.get = (options) ->
 
   # Convert settings.borderline to numeral borderline value
   # borderline value lies in same metrics with offset.before
-  if settings.borderline is 'before'
-    borderline = parentOffset.before
-  else if settings.borderline is 'after'
-    borderline = parentOffset.before + parentOffset.blockSize
-  else if settings.borderline is 'center'
-    borderline = parentOffset.before + parentOffset.blockSize / 2
-  else if typeof settings.borderline is 'number'
-    borderline = parentOffset.before + parentOffset.blockSize * settings.borderline
-  else
-    throw new TypeError 'howmuchread: options.borderline must be string or number'
+  borderline = getBorderValue parentOffset, settings.borderline
 
   # Get total length of text
   totalLength = howmuchread.getLength.call this
@@ -53,57 +44,58 @@ howmuchread.get = (options) ->
     metrics[N] = targetOffset
 
     # Convert settings.baseline to numeral baseline value
-    if settings.baseline is 'before'
-      baseline = targetOffset.before
-    else if settings.baseline is 'after'
-      baseline = targetOffset.before + targetOffset.blockSize
-    else if settings.baseline is 'center'
-      baseline = targetOffset.before + targetOffset.blockSize / 2
-    else if typeof settings.baseline is 'number'
-      baseline = targetOffset.before + targetOffset.blockSize * settings.baseline
-    else
-      throw new TypeError 'howmuchread: options.baseline must be string or number'
+    baseline = getBorderValue targetOffset, settings.baseline
 
     return baseline > borderline
 
   if settings.getMetric
     metric = metrics[position]
     metric.position = position
-    return metrics
+    return metric
   else
     return position
 
 howmuchread.scrollTo = (N, options) ->
-  options = $.extend parent: this, options
-  $this = $ this
-  $parent = $ options.parent
-  console.log this
-  writingMode = parseWritingMode.call this
-  if $parent.is $ window
-    offset =
-      top: $(window).scrollTop()
-      left: $(window).scrollLeft()
-  else if $parent.is $ document
-    offset =
-      top: 0
-      left: 0
-  else
-    offset = $parent.offset()
-  wrapNthCharacter $this, N
-  testOffset = $('span#howmuchread-wrapper').offset()
-  testHeight = $('span#howmuchread-wrapper').height()
-  testWidth = $('span#howmuchread-wrapper').width()
-  unwrapCharacter $this
+  defaults =
+    parent: this
+    baseline: 'before'
+    borderline: 'before'
+    wrapperId: 'howmuchread-wrapper'
+    writingMode: {}
+
+  # Extend defaults to options
+  settings = $.extend {}, defaults, options
+
+  $parent = $ settings.parent
+
+  # Parse writing-mode of parent element
+  writingMode = $.extend parseWritingMode.call(this), settings.writingMode
+
+  # Get offset of parent element
+  parentOffset = getOffset settings.parent, writingMode
+
+  # Convert settings.borderline to numeral borderline value
+  # borderline value lies in same metrics with offset.before
+  borderline = getBorderValue parentOffset, settings.borderline
+
+  # Wrap target character and get offset
+  wrapNthCharacter $(this), N, settings.wrapperId
+  targetOffset = getOffset $("span##{settings.wrapperId}"), writingMode
+  unwrapCharacter $(this), settings.wrapperId
+
+  # Convert settings.baseline to numeral baseline value
+  baseline = getBorderValue targetOffset, settings.baseline
+
   if writingMode.horizontal
     if writingMode.ttb
-      $parent.scrollTop $parent.scrollTop() + testOffset.top - (offset.top)
+      $parent.scrollTop $parent.scrollTop() + (baseline - borderline)
     else
-      $parent.scrollTop $parent.scrollTop() + testOffset.top - (offset.top) - $parent.height() + testHeight
+      $parent.scrollTop $parent.scrollTop() - (baseline - borderline)
   else
     if writingMode.rtl
-      scrollLeft.call options.parent, scrollLeft.call(options.parent, undefined, writingMode) + testOffset.left - (offset.left) - $parent.width() + testWidth, parseWritingMode.call(this), writingMode
+      scrollLeft.call settings.parent, scrollLeft.call(settings.parent, undefined, writingMode) - (baseline - borderline), writingMode
     else
-      scrollLeft.call options.parent, scrollLeft.call(options.parent, undefined, writingMode) + testOffset.left - (offset.left), parseWritingMode.call(this), writingMode
+      scrollLeft.call settings.parent, scrollLeft.call(settings.parent, undefined, writingMode) + (baseline - borderline), writingMode
 
 howmuchread.getLength = ->
   textNodes = getTextNodes $ this

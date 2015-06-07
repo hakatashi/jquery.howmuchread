@@ -1,8 +1,6 @@
 # wrap Nth character of text with span#howmuchread-wrapper
 wrapNthCharacter = ($element, N) ->
   cnt = 0
-  target = undefined
-  position = undefined
   textNodes = getTextNodes($element)
   # calculate target and position
   i = 0
@@ -17,11 +15,11 @@ wrapNthCharacter = ($element, N) ->
     return false
   text = target.nodeValue
   $(target).replaceWith [
-    document.createTextNode(text.slice(0, position))
-    $('<span/>',
+    document.createTextNode text.slice 0, position
+    $ '<span/>',
       'id': 'howmuchread-wrapper'
-      'text': text.substr(position, 1))
-    document.createTextNode(text.slice(position + 1))
+      'text': text.substr position, 1
+    document.createTextNode text.slice position + 1
   ]
   true
 
@@ -47,19 +45,22 @@ getTextNodes = ($element) ->
   ret = []
   $element.contents().each ->
     # ELEMENT_NODE
-    if @nodeType == 1
-      ret = ret.concat(getTextNodes($(this)))
-    else if @nodeType == 3
+    if @nodeType is 1
+      ret = ret.concat getTextNodes $ this
+    else if @nodeType is 3
       ret.push this
     return
   ret
 
 parseWritingMode = ->
-  writingMode = $(this).css('writing-mode') or $(this).css('-webkit-writing-mode') or $(this).css('-ms-writing-mode') or $(this).css('-moz-writing-mode') or $(this).get(0).style.writingMode or $(this).get(0).style.msWritingMode
-  vertical = undefined
-  horizontal = undefined
-  ttb = undefined
-  rtl = undefined
+  writingMode =
+    $(this).css('writing-mode') or
+    $(this).css('-webkit-writing-mode') or
+    $(this).css('-ms-writing-mode') or
+    $(this).css('-moz-writing-mode') or
+    $(this).get(0).style.writingMode or
+    $(this).get(0).style.msWritingMode
+
   if writingMode == 'horizontal-tb' or writingMode == 'lr-tb' or writingMode == 'rl-tb'
     vertical = false
     horizontal = true
@@ -70,15 +71,15 @@ parseWritingMode = ->
     horizontal = false
     ttb = if $(this).css('text-orientation') == 'sideways-left' then $(this).css('direction') == 'rtl' else $(this).css('direction') != 'rtl'
     rtl = writingMode == undefined or writingMode == 'vertical-rl' or writingMode == 'tb' or writingMode == 'tb-rl'
-  {
-    'vertical': vertical
-    'horizontal': horizontal
-    'ttb': ttb
-    'rtl': rtl
+
+  return {
+    vertical: vertical
+    horizontal: horizontal
+    ttb: ttb
+    rtl: rtl
   }
 
 # scrollLeft with support for RTL
-
 scrollLeft = (value, writingMode) ->
   writingMode = writingMode or parseWritingMode.call(this)
   scrollType = undefined
@@ -111,10 +112,21 @@ scrollLeft = (value, writingMode) ->
 # detect rtl scroll type mode
 $(document).ready ->
   ###! jQuery RTL Scroll Type Detector | Copyright (c) 2012 Wei-Ko Kao | MIT License ###
-
   definer = undefined
+
   # on horizontal
-  definer = $('<div dir="rtl" style="font-size: 14px; width: 1px; height: 1px; position: absolute; top: -1000px; overflow: scroll;">A</div>').appendTo('body')[0]
+  definer = $('<div/>',
+    dir: 'rtl'
+    text: 'A'
+    css:
+      fontSize: '14px'
+      width: '1px'
+      height: '1px'
+      position: 'absolute'
+      top: '-1000px'
+      overflow: 'scroll'
+  ).appendTo('body')[0]
+
   rtlScrollType.horizontal = 'reverse'
   if definer.scrollLeft > 0
     rtlScrollType.horizontal = 'default'
@@ -122,9 +134,29 @@ $(document).ready ->
     definer.scrollLeft = 1
     if definer.scrollLeft == 0
       rtlScrollType.horizontal = 'negative'
+
   $(definer).remove()
+
   # on vertical
-  definer = $('<div style="font-size: 14px; width: 1px; height: 1px; position: absolute; top: -1000px; overflow: scroll; writing-mode: tb-rl; writing-mode: vertical-rl; -o-writing-mode: vertical-rl; -ms-writing-mode: tb-rl; -ms-writing-mode: vertical-rl; -moz-writing-mode: vertical-rl; -webkit-writing-mode: vertical-rl;">A</div>').appendTo('body')[0]
+  $definer = $ '<div/>',
+    text: 'A'
+    css:
+      fontSize: '14px'
+      width: '1px'
+      height: '1px'
+      position: 'absolute'
+      top: '-1000px'
+      overflow: 'scroll'
+      writingMode: 'tb-rl'
+      OWritingMode: 'vertical-rl'
+      MsWritingMode: 'tb-rl'
+      MozWritingMode: 'vertical-rl'
+      WebkitWritingMode: 'vertical-rl'
+  definer = $definer.css(
+    writingMode: 'vertical-rl'
+    MsWritingMode: 'vertical-rl'
+  ).appendTo('body')[0]
+
   rtlScrollType.vertical = 'reverse'
   if definer.scrollLeft > 0
     rtlScrollType.vertical = 'default'
@@ -132,5 +164,7 @@ $(document).ready ->
     definer.scrollLeft = 1
     if definer.scrollLeft == 0
       rtlScrollType.vertical = 'negative'
+
   $(definer).remove()
+
   return

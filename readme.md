@@ -5,6 +5,11 @@
 [travis-url]: https://travis-ci.org/hakatashi/jquery.howmuchread
 [travis-image]: https://travis-ci.org/hakatashi/jquery.howmuchread.svg?branch=master
 
+jQuery.howmuchread is now in 0.0.x status. That is, the package is very instable
+and anything may change at any time. [Kick my hip][tweet] to forward development.
+
+[tweet]: https://twitter.com/intent/tweet?text=@hakatashi%20
+
 ## Getting Started
 
 Download the [production version][min] or the [development version][max].
@@ -16,14 +21,11 @@ In your web page:
 
 ```html
 <script src="jquery.js"></script>
-<script src="dist/howmuchread.min.js"></script>
+<script src="dist/jquery.howmuchread.min.js"></script>
 <script>
-  jQuery(function ($) {
-    $.awesome(); // "awesome"
-  });
+  $('article').howmuchread();
 </script>
 ```
-
 
 ## License
 

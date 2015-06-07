@@ -6,10 +6,16 @@ $.fn.howmuchread = (action) ->
 
 howmuchread = {}
 
-howmuchread.get = (config) ->
-  config = $.extend parent: this, config
+howmuchread.get = (options) ->
+  defaults =
+    parent: this
+    baseline: 'before'
+    borderline: 'before'
+    wrapperId: 'howmuchread-wrapper'
+
+  settings = $.extend defaults, options
   $this = $ this
-  $parent = $ config.parent
+  $parent = $ settings.parent
   textNodes = getTextNodes $this
   if $parent.is $ window
     offset =
@@ -36,11 +42,11 @@ howmuchread.get = (config) ->
     i = 0
     loop
       i++
-      wrapNthCharacter $this, N
-      targetOffset = $('span#howmuchread-wrapper').offset()
-      targetOffset.right = $(document).width() - (targetOffset.left) - $('span#howmuchread-wrapper').width()
-      targetOffset.bottom = $(document).height() - (targetOffset.top) - $('span#howmuchread-wrapper').height()
-      unwrapCharacter $this
+      wrapNthCharacter $this, N, settings.wrapperId
+      targetOffset = $("span##{settings.wrapperId}").offset()
+      targetOffset.right = $(document).width() - (targetOffset.left) - $("span##{settings.wrapperId}").width()
+      targetOffset.bottom = $(document).height() - (targetOffset.top) - $("span##{settings.wrapperId}").height()
+      unwrapCharacter $this, settings.wrapperId
       unless typeof targetOffset == 'undefined' and i < 5
         break
 
@@ -69,10 +75,10 @@ howmuchread.get = (config) ->
 
   return position
 
-howmuchread.scrollTo = (N, config) ->
-  config = $.extend parent: this, config
+howmuchread.scrollTo = (N, options) ->
+  options = $.extend parent: this, options
   $this = $ this
-  $parent = $ config.parent
+  $parent = $ options.parent
   console.log this
   writingMode = parseWritingMode.call this
   if $parent.is $ window
@@ -97,9 +103,9 @@ howmuchread.scrollTo = (N, config) ->
       $parent.scrollTop $parent.scrollTop() + testOffset.top - (offset.top) - $parent.height() + testHeight
   else
     if writingMode.rtl
-      scrollLeft.call config.parent, scrollLeft.call(config.parent, undefined, writingMode) + testOffset.left - (offset.left) - $parent.width() + testWidth, parseWritingMode.call(this), writingMode
+      scrollLeft.call options.parent, scrollLeft.call(options.parent, undefined, writingMode) + testOffset.left - (offset.left) - $parent.width() + testWidth, parseWritingMode.call(this), writingMode
     else
-      scrollLeft.call config.parent, scrollLeft.call(config.parent, undefined, writingMode) + testOffset.left - (offset.left), parseWritingMode.call(this), writingMode
+      scrollLeft.call options.parent, scrollLeft.call(options.parent, undefined, writingMode) + testOffset.left - (offset.left), parseWritingMode.call(this), writingMode
 
 howmuchread.getLength = ->
   textNodes = getTextNodes $ this

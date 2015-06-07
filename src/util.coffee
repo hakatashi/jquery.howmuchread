@@ -1,5 +1,5 @@
 # wrap Nth character of text with span#howmuchread-wrapper
-wrapNthCharacter = ($element, N) ->
+wrapNthCharacter = ($element, N, wrapperId) ->
   cnt = 0
   textNodes = getTextNodes($element)
   # calculate target and position
@@ -17,14 +17,14 @@ wrapNthCharacter = ($element, N) ->
   $(target).replaceWith [
     document.createTextNode text.slice 0, position
     $ '<span/>',
-      'id': 'howmuchread-wrapper'
+      'id': wrapperId
       'text': text.substr position, 1
     document.createTextNode text.slice position + 1
   ]
   true
 
-unwrapCharacter = ($element) ->
-  $element.find('span#howmuchread-wrapper').each ->
+unwrapCharacter = ($element, wrapperId) ->
+  $element.find("span##{wrapperId}").each ->
     prev = @previousSibling
     next = @nextSibling
     text = ''

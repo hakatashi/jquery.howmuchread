@@ -23,6 +23,7 @@ howmuchread.get = (options) ->
   parentOffset = getOffset settings.parent, writingMode
 
   # Convert settings.borderline to numeral borderline value
+  # borderline value lies in same metrics with offset.before
   if settings.borderline is 'before'
     borderline = parentOffset.before
   else if settings.borderline is 'after'
@@ -40,21 +41,10 @@ howmuchread.get = (options) ->
   # binary search
   position = binarySearch totalLength, (N) =>
     wrapNthCharacter $(this), N, settings.wrapperId
-    targetOffset = $("span##{settings.wrapperId}").offset()
-    targetOffset.right = $(document).width() - (targetOffset.left) - $("span##{settings.wrapperId}").width()
-    targetOffset.bottom = $(document).height() - (targetOffset.top) - $("span##{settings.wrapperId}").height()
+    targetOffset = getOffset $("span##{settings.wrapperId}"), writingMode
     unwrapCharacter $(this), settings.wrapperId
 
-    if writingMode.horizontal
-      if writingMode.asc
-        return targetOffset.top > borderline
-      else
-        return targetOffset.bottom < borderline
-    else
-      if writingMode.asc
-        return targetOffset.right > borderline
-      else
-        return targetOffset.left < borderline
+    return targetOffset.before > borderline
 
   return position
 

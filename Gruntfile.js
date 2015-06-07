@@ -16,26 +16,23 @@ module.exports = function (grunt) {
       ' Licensed MIT */\n',
     // Task configuration.
     clean: {
-      files: ['dist/*']
-    },
-    concat: {
-      options: {
-        banner: '<%= banner %>',
-        stripBanners: true
-      },
-      dist: {
-        src: ['src/<%= pkg.name %>.js'],
-        dest: 'dist/jquery.<%= pkg.name %>.js'
-      }
+      build: ['build/*'],
+      dist: ['dist/*']
     },
     coffee: {
-      compile: {
+      build: {
         options: {
           join: true
         },
-        files: {
-          'dist/jquery.<%= pkg.name %>.js': ['src/*.coffee']
-        }
+        dest: 'build/jquery.<%= pkg.name %>.js',
+        src: ['src/*.coffee']
+      },
+      dist: {
+        options: {
+          join: true
+        },
+        dest: 'dist/jquery.<%= pkg.name %>.js',
+        src: ['src/*.coffee']
       }
     },
     uglify: {
@@ -43,7 +40,7 @@ module.exports = function (grunt) {
         banner: '<%= banner %>'
       },
       dist: {
-        src: '<%= concat.dist.dest %>',
+        src: '<%= coffee.dist.dest %>',
         dest: 'dist/jquery.<%= pkg.name %>.min.js'
       }
     },
@@ -117,8 +114,9 @@ module.exports = function (grunt) {
 
   // Default task.
   grunt.registerTask('default', ['build', 'test']);
-  grunt.registerTask('build', ['clean', 'coffee', 'uglify']);
-  grunt.registerTask('serve', ['connect', 'watch']);
+  grunt.registerTask('build', ['clean:build', 'coffee:build']);
+  grunt.registerTask('dist', ['clean:dist', 'coffee:dist', 'uglify']);
+  grunt.registerTask('serve', ['build', 'connect', 'watch']);
   grunt.registerTask('test', ['jshint', 'connect', 'qunit']);
   grunt.registerTask('saucelabs', ['build', 'test', 'saucelabs-qunit']);
 };

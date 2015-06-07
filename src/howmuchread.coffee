@@ -13,6 +13,7 @@ howmuchread.get = (options) ->
     borderline: 'before'
     wrapperId: 'howmuchread-wrapper'
     writingMode: {}
+    getMetric: false
 
   # Extend defaults to options
   settings = $.extend {}, defaults, options
@@ -39,11 +40,17 @@ howmuchread.get = (options) ->
   # Get total length of text
   totalLength = howmuchread.getLength.call this
 
+  # Metrics cache
+  metrics = {}
+
   # binary search
   position = binarySearch totalLength, (N) =>
     wrapNthCharacter $(this), N, settings.wrapperId
     targetOffset = getOffset $("span##{settings.wrapperId}"), writingMode
     unwrapCharacter $(this), settings.wrapperId
+
+    # Cache metrics
+    metrics[N] = targetOffset
 
     # Convert settings.baseline to numeral baseline value
     if settings.baseline is 'before'
@@ -59,7 +66,12 @@ howmuchread.get = (options) ->
 
     return baseline > borderline
 
-  return position
+  if settings.getMetric
+    metric = metrics[position]
+    metric.position = position
+    return metrics
+  else
+    return position
 
 howmuchread.scrollTo = (N, options) ->
   options = $.extend parent: this, options

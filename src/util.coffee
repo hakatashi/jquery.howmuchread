@@ -121,6 +121,66 @@ scrollLeft = (value, writingMode) ->
     else
       $(this).scrollLeft value
 
+# Get offset position along with logical parameters
+getOffset = (element, writingMode) ->
+  writingMode = writingMode or parseWritingMode.call element
+
+  $element = $ element
+
+  if $element.is $ window
+    offset =
+      top: $(window).scrollTop()
+      left: $(window).scrollLeft()
+  else if $element.is $ document
+    offset =
+      top: 0
+      left: 0
+  else
+    offset = $element.offset()
+  offset.width = $element.width()
+  offset.height = $element.height()
+  offset.right = $(document).width() - offset.left - offset.width
+  offset.bottom = $(document).height() - offset.top - offset.height
+
+  # Physical offset to Logical offset
+  if writingMode.horizontal
+    offset.blockSize = offset.height
+    offset.inlineSize = offset.width
+    
+    if writingMode.ttb
+      offset.before = offset.top
+      offset.after = offset.bottom
+    else
+      offset.before = offset.bottom
+      offset.after = offset.top
+
+    if writingMode.rtl
+      offset.start = offset.right
+      offset.end = offset.left
+    else
+      offset.start = offset.left
+      offset.end = offset.right
+
+  else if writingMode.vertical
+    offset.blockSize = offset.width
+    offset.inlineSize = offset.height
+
+    if writingMode.rtl
+      offset.before = offset.right
+      offset.after = offset.left
+    else
+      offset.before = offset.left
+      offset.after = offset.right
+
+    if writingMode.ttb
+      offset.start = offset.top
+      offset.end = offset.bottom
+    else
+      offset.start = offset.bottom
+      offset.end = offset.top
+
+  return offset
+
 # detect rtl scroll type mode
 $(document).ready ->
   ###! jQuery RTL Scroll Type Detector | Copyright (c) 2012 Wei-Ko Kao | MIT License ###

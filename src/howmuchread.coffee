@@ -19,61 +19,18 @@ howmuchread.get = (options) ->
   # Parse writing-mode of parent element
   writingMode = parseWritingMode.call this
 
-  # Get sanitized offset of parent element
-  $parent = $ settings.parent
-  if $parent.is $ window
-    offset =
-      top: $(window).scrollTop()
-      left: $(window).scrollLeft()
-  else if $parent.is $ document
-    offset =
-      top: 0
-      left: 0
-  else
-    offset = $parent.offset()
-  offset.right = $(document).width() - offset.left - $parent.width()
-  offset.bottom = $(document).height() - offset.top - $parent.height()
-
-  # Physical offset to Logical offset
-  if writingMode.horizontal
-    if writingMode.ttb
-      offset.before = offset.top
-      offset.after = offset.bottom
-    else
-      offset.before = offset.bottom
-      offset.after = offset.top
-
-    if writingMode.rtl
-      offset.start = offset.right
-      offset.end = offset.left
-    else
-      offset.start = offset.left
-      offset.end = offset.right
-
-  else if writingMode.vertical
-    if writingMode.rtl
-      offset.before = offset.right
-      offset.after = offset.left
-    else
-      offset.before = offset.left
-      offset.after = offset.right
-
-    if writingMode.ttb
-      offset.start = offset.top
-      offset.end = offset.bottom
-    else
-      offset.start = offset.bottom
-      offset.end = offset.top
+  # Get offset of parent element
+  parentOffset = getOffset settings.parent, writingMode
 
   # Convert settings.borderline to numeral borderline value
   if settings.borderline is 'before'
-    borderline = offset.before
+    borderline = parentOffset.before
   else if settings.borderline is 'after'
-    borderline = offset.after
+    borderline = parentOffset.before + parentOffset.blockSize
   else if settings.borderline is 'center'
-    borderline = (offset.before + offset.after) / 2
+    borderline = parentOffset.before + parentOffset.blockSize / 2
   else if typeof settings.borderline is 'number'
-    borderline = offset.before * (1 - settings.borderline) + offset.after * settins.borderline
+    borderline = parentOffset.before + parentOffset.blockSize * settings.borderline
   else
     throw new TypeError 'howmuchread: options.borderline must be string or number'
 

@@ -1,9 +1,11 @@
-# jQuery.howmuchread [![Build Status][travis-image]][travis-url]
+# jQuery.howmuchread [![Build Status][travis-image]][travis-url] [![Bower][bower-image]][bower-url]
 
 > Answers your fancy questions such as "How many characters I scrolled?"
 
 [travis-url]: https://travis-ci.org/hakatashi/jquery.howmuchread
 [travis-image]: https://travis-ci.org/hakatashi/jquery.howmuchread.svg?branch=master
+[bower-url]: http://bower.io/search/?q=jquery.howmuchread
+[bower-image]: https://img.shields.io/bower/v/jquery.howmuchread.svg
 
 jQuery.howmuchread is now in 0.1.x status. That is, the package is very instable
 and anything may change at any time. [Kick my hip][tweet] to forward development.

@@ -37,7 +37,8 @@ module.exports = function (grunt) {
     },
     uglify: {
       options: {
-        banner: '<%= banner %>'
+        banner: '<%= banner %>',
+        preserveComments: 'some'
       },
       dist: {
         src: '<%= coffee.dist.dest %>',

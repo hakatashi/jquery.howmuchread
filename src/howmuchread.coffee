@@ -44,7 +44,19 @@ howmuchread.get = (options) ->
     targetOffset = getOffset $("span##{settings.wrapperId}"), writingMode
     unwrapCharacter $(this), settings.wrapperId
 
-    return targetOffset.before > borderline
+    # Convert settings.baseline to numeral baseline value
+    if settings.baseline is 'before'
+      baseline = targetOffset.before
+    else if settings.baseline is 'after'
+      baseline = targetOffset.before + targetOffset.blockSize
+    else if settings.baseline is 'center'
+      baseline = targetOffset.before + targetOffset.blockSize / 2
+    else if typeof settings.baseline is 'number'
+      baseline = targetOffset.before + targetOffset.blockSize * settings.baseline
+    else
+      throw new TypeError 'howmuchread: options.baseline must be string or number'
+
+    return baseline > borderline
 
   return position
 

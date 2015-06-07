@@ -12,12 +12,13 @@ howmuchread.get = (options) ->
     baseline: 'before'
     borderline: 'before'
     wrapperId: 'howmuchread-wrapper'
+    writingMode: {}
 
   # Extend defaults to options
   settings = $.extend {}, defaults, options
 
   # Parse writing-mode of parent element
-  writingMode = parseWritingMode.call this
+  writingMode = $.extend parseWritingMode.call(this), settings.writingMode
 
   # Get offset of parent element
   parentOffset = getOffset settings.parent, writingMode

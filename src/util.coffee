@@ -76,19 +76,11 @@ parseWritingMode = ->
     ttb = if $this.css('text-orientation') == 'sideways-left' then $this.css('direction') == 'rtl' else $this.css('direction') != 'rtl'
     rtl = writingMode == undefined or writingMode == 'vertical-rl' or writingMode == 'tb' or writingMode == 'tb-rl'
 
-  # Check if start-to-end direction is 'ascending' or 'descending'.
-  # Say, Left-to-Right is 'ascending' because x-coordinary increases as text move forward.
-  if horizontal
-    asc = ttb
-  else
-    asc = !rtl
-
   return {
     vertical: vertical
     horizontal: horizontal
     ttb: ttb
     rtl: rtl
-    asc: asc
   }
 
 # scrollLeft with support for RTL
@@ -146,7 +138,7 @@ getOffset = (element, writingMode) ->
   if writingMode.horizontal
     offset.blockSize = offset.height
     offset.inlineSize = offset.width
-    
+
     if writingMode.ttb
       offset.before = offset.top
       offset.after = offset.bottom

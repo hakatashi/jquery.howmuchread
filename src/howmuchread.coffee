@@ -16,7 +16,6 @@ howmuchread.get = (options) ->
   settings = $.extend defaults, options
   $this = $ this
   $parent = $ settings.parent
-  textNodes = getTextNodes $this
   if $parent.is $ window
     offset =
       top: $(window).scrollTop()
@@ -32,23 +31,15 @@ howmuchread.get = (options) ->
   writingMode = parseWritingMode.call(this)
 
   # Get total length of text
-  totalLength = 0
-  $.each textNodes, (index, textNode) ->
-    totalLength += textNode.nodeValue.length
-    return
+  totalLength = howmuchread.getLength.call this
 
   # binary search
   position = binarySearch totalLength, (N) ->
-    i = 0
-    loop
-      i++
-      wrapNthCharacter $this, N, settings.wrapperId
-      targetOffset = $("span##{settings.wrapperId}").offset()
-      targetOffset.right = $(document).width() - (targetOffset.left) - $("span##{settings.wrapperId}").width()
-      targetOffset.bottom = $(document).height() - (targetOffset.top) - $("span##{settings.wrapperId}").height()
-      unwrapCharacter $this, settings.wrapperId
-      unless typeof targetOffset == 'undefined' and i < 5
-        break
+    wrapNthCharacter $this, N, settings.wrapperId
+    targetOffset = $("span##{settings.wrapperId}").offset()
+    targetOffset.right = $(document).width() - (targetOffset.left) - $("span##{settings.wrapperId}").width()
+    targetOffset.bottom = $(document).height() - (targetOffset.top) - $("span##{settings.wrapperId}").height()
+    unwrapCharacter $this, settings.wrapperId
 
     if writingMode.horizontal
       if writingMode.ttb
@@ -85,7 +76,7 @@ howmuchread.scrollTo = (N, options) ->
     offset =
       top: $(window).scrollTop()
       left: $(window).scrollLeft()
-  else if $parent.is $ documen
+  else if $parent.is $ document
     offset =
       top: 0
       left: 0
@@ -112,5 +103,4 @@ howmuchread.getLength = ->
   totalLength = 0
   $.each textNodes, (index, textNode) ->
     totalLength += textNode.nodeValue.length
-    return
-  totalLength
+  return totalLength

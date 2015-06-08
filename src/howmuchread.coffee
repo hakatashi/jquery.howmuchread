@@ -49,9 +49,24 @@ howmuchread.get = (options) ->
     return baseline > borderline
 
   if settings.getMetric
-    metric = metrics[position]
-    metric.position = position
-    return metric
+    if position of metrics
+      metric = metrics[position]
+      metric.position = position
+      return metric
+    else
+      return {
+        position: position
+        top: null
+        left: null
+        right: null
+        bottom: null
+        before: null
+        after: null
+        start: null
+        end: null
+        borderSize: null
+        inlineSize: null
+      }
   else
     return position
 

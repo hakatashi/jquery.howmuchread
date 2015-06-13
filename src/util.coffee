@@ -92,6 +92,11 @@ getBorderValue = (offset, position) ->
     offset.before + offset.blockSize
   else if position is 'center'
     offset.before + offset.blockSize / 2
+  else if position is 'scroll'
+    if offset.scroll is null
+      offset.before + offset.blockSize
+    else
+      offset.before + offset.blockSize * offset.scroll
   else if typeof position is 'number'
     offset.before + offset.blockSize * position
   else
@@ -137,16 +142,25 @@ getOffset = (element, writingMode) ->
     offset =
       top: $(window).scrollTop()
       left: $(window).scrollLeft()
+      scrollHeight: $(document).height()
+      scrollWidth: $(document).width()
   else if $element.is $ document
     offset =
       top: 0
       left: 0
+      scrollHeight: $(document).height()
+      scrollWidth: $(document).width()
   else
     offset = $element.offset()
   offset.width = $element.width()
   offset.height = $element.height()
   offset.right = $(document).width() - offset.left - offset.width
   offset.bottom = $(document).height() - offset.top - offset.height
+
+  offset.scrollTop = $element.scrollTop()
+  offset.scrollLeft = scrollLeft undefined, writingMode
+  offset.scrollHeight ?= $element.get(0).scrollHeight
+  offset.scrollWidth ?= $element.get(0).scrollWidth
 
   # Physical offset to Logical offset
   if writingMode.horizontal
@@ -156,9 +170,15 @@ getOffset = (element, writingMode) ->
     if writingMode.ttb
       offset.before = offset.top
       offset.after = offset.bottom
+      offset.scroll = switch offset.scrollHeight - offset.height
+        when 0 then null
+        else offset.scrollTop / (offset.scrollHeight - offset.height)
     else
       offset.before = offset.bottom
       offset.after = offset.top
+      offset.scroll = switch offset.scrollHeight - offset.height
+        when 0 then null
+        else 1 - offset.scrollTop / (offset.scrollHeight - offset.height)
 
     if writingMode.rtl
       offset.start = offset.right
@@ -174,9 +194,15 @@ getOffset = (element, writingMode) ->
     if writingMode.rtl
       offset.before = offset.right
       offset.after = offset.left
+      offset.scroll = switch offset.scrollWidth - offset.width
+        when 0 then null
+        else 1 - offset.scrollLeft / (offset.scrollWidth - offset.width)
     else
       offset.before = offset.left
       offset.after = offset.right
+      offset.scroll = switch offset.scrollWidth - offset.width
+        when 0 then null
+        else offset.scrollLeft / (offset.scrollWidth - offset.width)
 
     if writingMode.ttb
       offset.start = offset.top

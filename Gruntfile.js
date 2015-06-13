@@ -48,7 +48,12 @@ module.exports = function (grunt) {
     qunit: {
       all: {
         options: {
-          urls: ['http://localhost:9000/test/basic.html']
+          urls: ['test/basic.html'],
+          coverage: {
+            src: ['build/*.js'],
+            instrumentedFiles: 'temp/',
+            lcovReport: 'coverage/'
+          }
         }
       }
     },

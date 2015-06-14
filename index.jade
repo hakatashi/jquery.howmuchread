@@ -1,0 +1,172 @@
+doctype
+-
+	url = {
+		howmuchreadScript: 'https://raw.githubusercontent.com/hakatashi/jquery.howmuchread/master/dist/jquery.howmuchread.min.js',
+		bower: 'http://bower.io/',
+		jquery: 'https://jquery.com/download/',
+		binarySearch: 'https://www.topcoder.com/community/data-science/data-science-tutorials/binary-search/',
+	}
+html
+	head
+		meta(charset='utf-8')
+		title jQuery.howmuchread - How many characters I scrolled?
+		link(href='http://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css', rel='stylesheet')
+		link(href='http://fonts.googleapis.com/css?family=Droid+Sans|Oswald', rel='stylesheet')
+		script(src='https://code.jquery.com/jquery-1.11.3.min.js')
+		script(src='dist/jquery.howmuchread.js')
+		script.
+			$(document).ready(function () {
+				$(window).scroll(function () {
+					var metrics = $('.bodytext').howmuchread({
+						parent: window,
+						borderline: 'scroll',
+						baseline: 'after',
+						getMetric: true
+					});
+					$('.counter').text(metrics.position);
+					if (metrics.top === null) {
+						$('.marker').hide()
+					} else {
+						$('.marker').show()
+						$('.marker').css({
+							top: metrics.top + metrics.blockSize * 0.7 - $('.marker').height(),
+							right: metrics.right + metrics.inlineSize + 10
+						});
+					}
+				}).scroll();
+				$(window).resize(function () {
+					$('.label').css({
+						left: $('.bodytext').offset().left + $('.bodytext').width() + 20,
+					});
+				}).resize();
+			});
+		style.
+			body {
+				color: #555;
+				font-family: 'Droid Sans', sans-serif;
+			}
+			a {
+				text-decoration: none;
+				color: cornflowerblue;
+			}
+			pre {
+				background-color: darkcyan;
+				color: white;
+				display: block;
+				padding: 18px;
+				border-radius: 5px;
+			}
+			h2 {
+				color: #555;
+				margin: 40px 0 15px;
+				font: 30px 'Oswald', sans-serif;
+			}
+			.label {
+				position: fixed;
+				left: 100%;
+				top: 100px;
+				font: 20px 'Oswald', sans-serif;
+			}
+			.counter {
+				font-size: xx-large;
+			}
+			.marker {
+				position: absolute;
+				padding: 5px;
+				color: white;
+				border-radius: 5px;
+				font: 16px 'Oswald', sans-serif;
+			}
+			.bodytext {
+				width: 600px;
+				margin: 0 auto;
+			}
+			header h1 {
+				font: 70px 'Oswald', sans-serif;
+				text-align: center;
+				margin: 30px 0;
+			}
+			header h1 strong {
+				font-weight: normal;
+				color: cadetblue;
+			}
+			header p {
+				font: 30px 'Oswald', sans-serif;
+				text-align: center;
+			}
+			.badges {
+				height: 28px;
+				text-align: center;
+			}
+			.badge {
+				margin: 2px;
+			}
+			.arrow_box {
+				background: #d52b2b;
+			}
+			.arrow_box:after {
+				left: 100%;
+				top: 50%;
+				border: solid transparent;
+				content: " ";
+				height: 0;
+				width: 0;
+				position: absolute;
+				pointer-events: none;
+				border-color: rgba(213, 43, 43, 0);
+				border-left-color: #d52b2b;
+				border-width: 5px;
+				margin-top: -5px;
+			}
+	body
+		.label
+			span.counter-before You've read
+			div.counter 0
+			span.counter-after characters!
+		.marker.arrow_box You're reading here.
+		.bodytext
+			header
+				h1 jQuery.how<strong>much</strong>read
+				p Answers your fancy questions such as<br>“How many characters I scrolled?”
+				div.badges
+					a.badge(href='https://travis-ci.org/hakatashi/jquery.howmuchread')
+						img(src='https://travis-ci.org/hakatashi/jquery.howmuchread.svg?branch=master')
+					a.badge(href='http://bower.io/search/?q=jquery.howmuchread')
+						img(src='https://img.shields.io/bower/v/jquery.howmuchread.svg')
+					a.badge(href='https://coveralls.io/r/hakatashi/jquery.howmuchread')
+						img(src='https://coveralls.io/repos/hakatashi/jquery.howmuchread/badge.svg')
+
+			a(href='#overview')
+				h2#overview Overview
+			p.
+				Have you ever been in the situation that you need to know the characters you
+				scrolled, or to scroll into the place of specific character?
+				<strong>jQuery.howmuchread is here for you!</strong>
+			p.
+				<strong>jQuery.howmuchread</strong> is a fancy jQuery plugin that plays with “scrolling”
+				and “character count.” It can serve as a great reading counter (as its name implies),
+				reading position indicator or somewhat neat page scroller!
+			p.
+				<strong>jQuery.howmuchread</strong> is powered by the power of the powerful
+				<a href="#{url.binarySearch}">binary search algorithm</a>, so you can find
+				the character of the specific position precisely, and also very quickly.
+
+			a(href='#getting-started')
+				h2#getting-started Getitng Started
+			p
+				a(href=url.howmuchreadScript) Download
+				|  the script and include it, along with <a href="#{url.jquery}">jQuery</a>.
+			pre.
+				&lt;script src="path/to/jquery.min.js"&gt;&lt;/script&gt;
+				&lt;script src="path/to/jquery.howmuchread.min.js"&gt;&lt;/script&gt;
+				&lt;script&gt;
+					$('article').howmuchread();
+				&lt;/script&gt;
+			p <a href="#{url.bower}">Bower</a> components are also available.
+			pre $ bower install jquery.howmuchread
+			
+			a(href='#demo')
+				h2#demo Demo
+			p.
+				As you may noticed, the whole this page is the demonstration of
+				this plugin. Also, you can get to the different behavior.

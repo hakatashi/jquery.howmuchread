@@ -57,10 +57,27 @@ html
 				padding: 18px;
 				border-radius: 5px;
 			}
+			h2, h3, h4, h5, h6 {
+				font-family: 'Oswald', sans-serif;
+			}
 			h2 {
 				color: #555;
 				margin: 40px 0 15px;
-				font: 30px 'Oswald', sans-serif;
+				font-size: 30px;
+			}
+			h3 {
+				font-size: 24px;
+			}
+			h4 {
+				font-size: 20px;
+			}
+			dt {
+				font-family: 'Oswald', sans-serif;
+				font-size: 18px;
+				margin: 20px 0 5px;
+			}
+			dd {
+				margin: 10px 0 0 50px;
 			}
 			.label {
 				position: fixed;
@@ -148,12 +165,18 @@ html
 				<strong>jQuery.howmuchread is here for you!</strong>
 			p.
 				<strong>jQuery.howmuchread</strong> is a fancy jQuery plugin that plays with “scrolling”
-				and “counting character.” It can serve as a great reading counter (as its name implies),
+				and “counting characters.” It can serve as a great reading counter (as its name implies),
 				reading position indicator or somewhat neat page scroller!
 			p.
 				<strong>jQuery.howmuchread</strong> is powered by the power of the powerful
 				<a href="#{url.binarySearch}">binary search algorithm</a>, so you can find
 				the character of the specific position precisely, and also very quickly.
+
+			a(href='#feature')
+				h2#feature Feature
+			ul
+				li Fully customizable options
+				li RTL &amp; Vertical writing-modes are supported
 
 			a(href='#getting-started')
 				h2#getting-started Getitng Started
@@ -168,9 +191,88 @@ html
 				&lt;/script&gt;
 			p <a href="#{url.bower}">Bower</a> components are also available.
 			pre $ bower install jquery.howmuchread
-			
+
 			a(href='#demo')
 				h2#demo Demo
 			p.
-				As you may noticed, the whole this page is a demonstration of
+				As you may noticed, whole this page is a demonstration of
 				this plugin. Also, you can get to the different behavior.
+
+			a(href='#api')
+				h2#api API
+			a(href='#api-howmuchread')
+				h3#api-howmuchread .howmuchread([options])
+			p.
+				Get the count of characters you scrolled, indicated by the scroll position of the element.
+			h4 Options
+			p Options have to be passed as object, and following keys are available.
+			dl
+				dt parent
+				dd.
+					(Default: self element) The element or anything that can be passed to jQuery object
+					that will be the basis of scrolling.
+					In other word, parent element is your “scroll area” of the target element.
+
+				dt borderline
+				dd.
+					(Default: 'before') String or number that determines the position where to be
+					guessed as scrolled.
+				dd.
+					If set to 'before', character will be guessed as scrolled when it completely
+					passes the scroll area over.
+				dd.
+					If set to 'center', character will be guessed as scrolled when it passes the
+					center line of the scroll area.
+				dd.
+					If set to 'after', character will be guessed as scrolled when it appears in
+					the scroll area.
+				dd.
+					If set to 'scroll', character will be guessed as scrolled by the scroll ratio of
+					the parent element. (See this page's demo)
+				dd.
+					If set to number, character will be guessed as scrolled when it passes the
+					line of the ratio you specified. (If set to 0, it's equivalent to 'before'.)
+
+				dt baseline
+				dd.
+					(Default: 'before') String or number that determines the position of the character
+					where the character is guessed as scrolled.
+				dd.
+					If set to 'before', character will be guessed as scrolled when its top line
+					passes the borderline over.
+				dd.
+					If set to 'center', character will be guessed as scrolled when its center line
+					passes the borderline over.
+				dd.
+					If set to 'after', character will be guessed as scrolled when its bottom line
+					passes the borderline over.
+				dd.
+					If set to number, character will be guessed as scrolled when its line of the
+					ratio you specified from the top line. (If set to 0, it's equivalent to 'before'.)
+
+				dt wrapperId
+				dd.
+					(Default: 'howmuchread-wrapper') The string used for the id of the wrapper element.
+					jQuery.howmuchread wraps some characters to test their position, and unwraps it
+					immediately. Just set this parameter to avoid id conflict with your webpage.
+
+				dt getMetric
+				dd
+					| (Default: false) The boolean. If set to true, instead of returning the count
+					| of characters, this method returns the metric information of the first character
+					| guessed as “not scrolled”.
+					| Returned object at least contains following information.
+					dl
+						dt top
+						dd Distance from the top of the document
+						dt left
+						dd Distance from the left of the document
+						dt right
+						dd Distance from the right of the document
+						dt bottom
+						dd Distance from the bottom of the document
+						dt width
+						dd Width of the character
+						dt height
+						dd Height of the character
+			h4 Example

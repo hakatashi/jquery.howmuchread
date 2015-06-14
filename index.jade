@@ -59,9 +59,9 @@ html
 			}
 			h2, h3, h4, h5, h6 {
 				font-family: 'Oswald', sans-serif;
+				color: #555;
 			}
 			h2 {
-				color: #555;
 				margin: 40px 0 15px;
 				font-size: 30px;
 			}
@@ -254,7 +254,7 @@ html
 				dd.
 					(Default: 'howmuchread-wrapper') The string used for the id of the wrapper element.
 					jQuery.howmuchread wraps some characters to test their position, and unwraps it
-					immediately. Just set this parameter to avoid id conflict with your webpage.
+					immediately. Just set this parameter to avoid id conflict with your existing webpage.
 
 				dt getMetric
 				dd
@@ -275,4 +275,14 @@ html
 						dd Width of the character
 						dt height
 						dd Height of the character
+						dt position
+						dd The count of characters which is normaly returned by the method
 			h4 Example
+			pre.
+				// used in this page
+				var metrics = $('.bodytext').howmuchread({
+					parent: window,
+					borderline: 'scroll',
+					baseline: 'after',
+					getMetric: true
+				});

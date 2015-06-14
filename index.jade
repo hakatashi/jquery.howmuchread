@@ -5,6 +5,8 @@ doctype
 		bower: 'http://bower.io/',
 		jquery: 'https://jquery.com/download/',
 		binarySearch: 'https://www.topcoder.com/community/data-science/data-science-tutorials/binary-search/',
+		MIT: 'http://opensource.org/licenses/MIT',
+		contributing: 'https://github.com/hakatashi/jquery.howmuchread/blob/master/contributing.md',
 	}
 html
 	head
@@ -45,6 +47,7 @@ html
 			body {
 				color: #555;
 				font-family: 'Droid Sans', sans-serif;
+				padding-bottom: 300px;
 			}
 			a {
 				text-decoration: none;
@@ -136,6 +139,15 @@ html
 				border-width: 5px;
 				margin-top: -5px;
 			}
+			footer {
+				margin-top: 100px;
+				text-align: center;
+				font: 30px 'Oswald', sans-serif;
+			}
+			footer strong {
+				font-weight: normal;
+				color: cadetblue;
+			}
 	body
 		.github-fork-ribbon-wrapper.right
 			.github-fork-ribbon
@@ -196,10 +208,11 @@ html
 				h2#demo Demo
 			p.
 				As you may noticed, whole this page is a demonstration of
-				this plugin. Also, you can get to the different behavior.
+				this plugin.
 
 			a(href='#api')
 				h2#api API
+
 			a(href='#api-howmuchread')
 				h3#api-howmuchread .howmuchread([options])
 			p.
@@ -286,3 +299,27 @@ html
 					baseline: 'after',
 					getMetric: true
 				});
+
+			a(href='#api-howmuchread-getlength')
+				h3#api-howmuchread-getlength .howmuchread('getLength')
+			p Returns the element's full character count which is compatible with jQuery.howmuchread()
+
+			a(href='#api-howmuchread-scrollto')
+				h3#api-howmuchread-scrollto .howmuchread('scrollTo', count[, options])
+			p Scroll the parent element to the count-th character exists.
+			h4 Options
+			p Available options are the same with .howmuchread()
+			h4 Example
+			pre.
+				// Scroll window to the 1000th character of the document
+				$('body').howmuchread('scrollTo', 1000, {
+					parent: window
+				});
+
+			a(href='#license')
+				h2#license License
+			p <a href="#{url.MIT}">MIT License</a> &copy; Koki Takahashi
+			p Any contributions are <a href="#{url.contributing}">very welcomed</a>!
+
+			footer
+				p Thank you for reading <strong>much</strong>!

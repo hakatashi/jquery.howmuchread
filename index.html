@@ -25,6 +25,7 @@
 });</script><style>body {
 	color: #555;
 	font-family: 'Droid Sans', sans-serif;
+	padding-bottom: 300px;
 }
 a {
 	text-decoration: none;
@@ -115,6 +116,15 @@ header p {
 	border-left-color: #d52b2b;
 	border-width: 5px;
 	margin-top: -5px;
+}
+footer {
+	margin-top: 100px;
+	text-align: center;
+	font: 30px 'Oswald', sans-serif;
+}
+footer strong {
+	font-weight: normal;
+	color: cadetblue;
 }</style></head><body><div class="github-fork-ribbon-wrapper right"><div class="github-fork-ribbon"><a href="https://github.com/hakatashi/jquery.howmuchread">Fork me on GitHub</a></div></div><div class="label"><span class="counter-before">You've read</span><div class="counter">0</div><span class="counter-after">characters!</span></div><div class="marker arrow_box">You're reading here.</div><div class="bodytext"><header><h1>jQuery.how<strong>much</strong>read</h1><p>Answers your fancy questions such as<br>“How many characters I scrolled?”</p><div class="badges"><a href="https://travis-ci.org/hakatashi/jquery.howmuchread" class="badge"><img src="https://travis-ci.org/hakatashi/jquery.howmuchread.svg?branch=master"></a><a href="http://bower.io/search/?q=jquery.howmuchread" class="badge"><img src="https://img.shields.io/bower/v/jquery.howmuchread.svg"></a><a href="https://coveralls.io/r/hakatashi/jquery.howmuchread" class="badge"><img src="https://coveralls.io/repos/hakatashi/jquery.howmuchread/badge.svg"></a></div></header><a href="#overview"><h2 id="overview">Overview</h2></a><p>Have you ever been in the situation that you need to know the characters you
 scrolled, or to scroll into the place of specific character?
 <strong>jQuery.howmuchread is here for you!</strong></p><p><strong>jQuery.howmuchread</strong> is a fancy jQuery plugin that plays with “scrolling”
@@ -127,7 +137,7 @@ the character of the specific position precisely, and also very quickly.
 &lt;script&gt;
 	$('article').howmuchread();
 &lt;/script&gt;</pre><p><a href="http://bower.io/">Bower</a> components are also available.</p><pre>$ bower install jquery.howmuchread</pre><a href="#demo"><h2 id="demo">Demo</h2></a><p>As you may noticed, whole this page is a demonstration of
-this plugin. Also, you can get to the different behavior.
+this plugin.
 </p><a href="#api"><h2 id="api">API</h2></a><a href="#api-howmuchread"><h3 id="api-howmuchread">.howmuchread([options])</h3></a><p>Get the count of characters you scrolled, indicated by the scroll position of the element.</p><h4>Options</h4><p>Options have to be passed as object, and following keys are available.</p><dl><dt>parent</dt><dd>(Default: self element) The element or anything that can be passed to jQuery object
 that will be the basis of scrolling.
 In other word, parent element is your “scroll area” of the target element.
@@ -156,4 +166,9 @@ var metrics = $('.bodytext').howmuchread({
 	borderline: 'scroll',
 	baseline: 'after',
 	getMetric: true
-});</pre></div></body></html>
+});
+</pre><a href="#api-howmuchread-getlength"><h3 id="api-howmuchread-getlength">.howmuchread('getLength')</h3></a><p>Returns the element's full character count which is compatible with jQuery.howmuchread()</p><a href="#api-howmuchread-scrollto"><h3 id="api-howmuchread-scrollto">.howmuchread('scrollTo', count[, options])</h3></a><p>Scroll the parent element to the count-th character exists.</p><h4>Options</h4><p>Available options are the same with .howmuchread()</p><h4>Example</h4><pre>// Scroll window to the 1000th character of the document
+$('body').howmuchread('scrollTo', 1000, {
+	parent: window
+});
+</pre><a href="#license"><h2 id="license">License</h2></a><p><a href="http://opensource.org/licenses/MIT">MIT License</a> &copy; Koki Takahashi</p><p>Any contributions are <a href="https://github.com/hakatashi/jquery.howmuchread/blob/master/contributing.md">very welcomed</a>!</p><footer><p>Thank you for reading <strong>much</strong>!</p></footer></div></body></html>

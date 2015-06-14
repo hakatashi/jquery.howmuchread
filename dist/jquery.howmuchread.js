@@ -46,9 +46,25 @@
       };
     })(this));
     if (settings.getMetric) {
-      metric = metrics[position];
-      metric.position = position;
-      return metric;
+      if (position in metrics) {
+        metric = metrics[position];
+        metric.position = position;
+        return metric;
+      } else {
+        return {
+          position: position,
+          top: null,
+          left: null,
+          right: null,
+          bottom: null,
+          before: null,
+          after: null,
+          start: null,
+          end: null,
+          borderSize: null,
+          inlineSize: null
+        };
+      }
     } else {
       return position;
     }
@@ -190,6 +206,12 @@
       return offset.before + offset.blockSize;
     } else if (position === 'center') {
       return offset.before + offset.blockSize / 2;
+    } else if (position === 'scroll') {
+      if (offset.scroll === null) {
+        return offset.before + offset.blockSize;
+      } else {
+        return offset.before + offset.blockSize * offset.scroll;
+      }
     } else if (typeof position === 'number') {
       return offset.before + offset.blockSize * position;
     } else {
@@ -240,12 +262,16 @@
     if ($element.is($(window))) {
       offset = {
         top: $(window).scrollTop(),
-        left: $(window).scrollLeft()
+        left: $(window).scrollLeft(),
+        scrollHeight: $(document).height(),
+        scrollWidth: $(document).width()
       };
     } else if ($element.is($(document))) {
       offset = {
         top: 0,
-        left: 0
+        left: 0,
+        scrollHeight: $(document).height(),
+        scrollWidth: $(document).width()
       };
     } else {
       offset = $element.offset();
@@ -254,15 +280,39 @@
     offset.height = $element.height();
     offset.right = $(document).width() - offset.left - offset.width;
     offset.bottom = $(document).height() - offset.top - offset.height;
+    offset.scrollTop = $element.scrollTop();
+    offset.scrollLeft = scrollLeft(void 0, writingMode);
+    if (offset.scrollHeight == null) {
+      offset.scrollHeight = $element.get(0).scrollHeight;
+    }
+    if (offset.scrollWidth == null) {
+      offset.scrollWidth = $element.get(0).scrollWidth;
+    }
     if (writingMode.horizontal) {
       offset.blockSize = offset.height;
       offset.inlineSize = offset.width;
       if (writingMode.ttb) {
         offset.before = offset.top;
         offset.after = offset.bottom;
+        offset.scroll = (function() {
+          switch (offset.scrollHeight - offset.height) {
+            case 0:
+              return null;
+            default:
+              return offset.scrollTop / (offset.scrollHeight - offset.height);
+          }
+        })();
       } else {
         offset.before = offset.bottom;
         offset.after = offset.top;
+        offset.scroll = (function() {
+          switch (offset.scrollHeight - offset.height) {
+            case 0:
+              return null;
+            default:
+              return 1 - offset.scrollTop / (offset.scrollHeight - offset.height);
+          }
+        })();
       }
       if (writingMode.rtl) {
         offset.start = offset.right;
@@ -277,9 +327,25 @@
       if (writingMode.rtl) {
         offset.before = offset.right;
         offset.after = offset.left;
+        offset.scroll = (function() {
+          switch (offset.scrollWidth - offset.width) {
+            case 0:
+              return null;
+            default:
+              return 1 - offset.scrollLeft / (offset.scrollWidth - offset.width);
+          }
+        })();
       } else {
         offset.before = offset.left;
         offset.after = offset.right;
+        offset.scroll = (function() {
+          switch (offset.scrollWidth - offset.width) {
+            case 0:
+              return null;
+            default:
+              return offset.scrollLeft / (offset.scrollWidth - offset.width);
+          }
+        })();
       }
       if (writingMode.ttb) {
         offset.start = offset.top;

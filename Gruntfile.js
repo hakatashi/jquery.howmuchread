@@ -48,7 +48,7 @@ module.exports = function (grunt) {
     qunit: {
       all: {
         options: {
-          urls: ['test/basic.html'],
+          urls: ['test/index.html'],
           coverage: {
             src: ['build/*.js'],
             instrumentedFiles: 'temp/',
@@ -60,7 +60,7 @@ module.exports = function (grunt) {
     'saucelabs-qunit': {
       all: {
         options: {
-          urls: ['http://localhost:9000/test/basic.html'],
+          urls: ['http://localhost:9000/test/index.html'],
           tunnelTimeout: 5,
           build: process.env.TRAVIS_JOB_ID,
           concurrency: 3,

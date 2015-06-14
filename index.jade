@@ -12,6 +12,7 @@ html
 		title jQuery.howmuchread - How many characters I scrolled?
 		link(href='http://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css', rel='stylesheet')
 		link(href='http://fonts.googleapis.com/css?family=Droid+Sans|Oswald', rel='stylesheet')
+		link(href='http://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.1.1/gh-fork-ribbon.min.css', rel='stylesheet')
 		script(src='https://code.jquery.com/jquery-1.11.3.min.js')
 		script(src='dist/jquery.howmuchread.js')
 		script.
@@ -119,6 +120,9 @@ html
 				margin-top: -5px;
 			}
 	body
+		.github-fork-ribbon-wrapper.right
+			.github-fork-ribbon
+				a(href='https://github.com/hakatashi/jquery.howmuchread') Fork me on GitHub
 		.label
 			span.counter-before You've read
 			div.counter 0
@@ -144,7 +148,7 @@ html
 				<strong>jQuery.howmuchread is here for you!</strong>
 			p.
 				<strong>jQuery.howmuchread</strong> is a fancy jQuery plugin that plays with “scrolling”
-				and “character count.” It can serve as a great reading counter (as its name implies),
+				and “counting character.” It can serve as a great reading counter (as its name implies),
 				reading position indicator or somewhat neat page scroller!
 			p.
 				<strong>jQuery.howmuchread</strong> is powered by the power of the powerful
@@ -168,5 +172,5 @@ html
 			a(href='#demo')
 				h2#demo Demo
 			p.
-				As you may noticed, the whole this page is the demonstration of
+				As you may noticed, the whole this page is a demonstration of
 				this plugin. Also, you can get to the different behavior.

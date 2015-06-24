@@ -46,7 +46,7 @@ howmuchread.get = (options) ->
     # Convert settings.baseline to numeral baseline value
     baseline = getBorderValue targetOffset, settings.baseline
 
-    return baseline > borderline
+    return baseline >= borderline
 
   if settings.getMetric
     if position of metrics

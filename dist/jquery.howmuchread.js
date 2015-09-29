@@ -26,7 +26,8 @@
       borderline: 'before',
       wrapperId: 'howmuchread-wrapper',
       writingMode: {},
-      getMetric: false
+      getMetric: false,
+      blacklist: ''
     };
     settings = $.extend({}, defaults, options);
     writingMode = $.extend(parseWritingMode.call(this), settings.writingMode);
@@ -42,7 +43,7 @@
         unwrapCharacter($(_this), settings.wrapperId);
         metrics[N] = targetOffset;
         baseline = getBorderValue(targetOffset, settings.baseline);
-        return baseline > borderline;
+        return baseline >= borderline;
       };
     })(this));
     if (settings.getMetric) {
@@ -77,6 +78,8 @@
       baseline: 'before',
       borderline: 'before',
       wrapperId: 'howmuchread-wrapper',
+      getMetric: false,
+      noScroll: false,
       writingMode: {}
     };
     settings = $.extend({}, defaults, options);
@@ -87,19 +90,27 @@
     wrapNthCharacter($(this), N, settings.wrapperId);
     targetOffset = getOffset($("span#" + settings.wrapperId), writingMode);
     unwrapCharacter($(this), settings.wrapperId);
-    baseline = getBorderValue(targetOffset, settings.baseline);
-    if (writingMode.horizontal) {
-      if (writingMode.ttb) {
-        return $parent.scrollTop($parent.scrollTop() + (baseline - borderline));
+    if (!settings.noScroll) {
+      baseline = getBorderValue(targetOffset, settings.baseline);
+      if (writingMode.horizontal) {
+        if (writingMode.ttb) {
+          $parent.scrollTop($parent.scrollTop() + (baseline - borderline));
+        } else {
+          $parent.scrollTop($parent.scrollTop() - (baseline - borderline));
+        }
       } else {
-        return $parent.scrollTop($parent.scrollTop() - (baseline - borderline));
+        if (writingMode.rtl) {
+          scrollLeft.call(settings.parent, scrollLeft.call(settings.parent, void 0, writingMode) - (baseline - borderline), writingMode);
+        } else {
+          scrollLeft.call(settings.parent, scrollLeft.call(settings.parent, void 0, writingMode) + (baseline - borderline), writingMode);
+        }
       }
+    }
+    if (settings.getMetric) {
+      targetOffset.position = N;
+      return targetOffset;
     } else {
-      if (writingMode.rtl) {
-        return scrollLeft.call(settings.parent, scrollLeft.call(settings.parent, void 0, writingMode) - (baseline - borderline), writingMode);
-      } else {
-        return scrollLeft.call(settings.parent, scrollLeft.call(settings.parent, void 0, writingMode) + (baseline - borderline), writingMode);
-      }
+      return $(this);
     }
   };
 

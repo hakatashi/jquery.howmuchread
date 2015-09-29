@@ -14,6 +14,7 @@ howmuchread.get = (options) ->
     wrapperId: 'howmuchread-wrapper'
     writingMode: {}
     getMetric: false
+    blacklist: ''
 
   # Extend defaults to options
   settings = $.extend {}, defaults, options

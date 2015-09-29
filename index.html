@@ -167,7 +167,8 @@ var metrics = $('.bodytext').howmuchread({
 	baseline: 'after',
 	getMetric: true
 });
-</pre><a href="#api-howmuchread-getlength"><h3 id="api-howmuchread-getlength">.howmuchread('getLength')</h3></a><p>Returns the element's full character count which is compatible with jQuery.howmuchread()</p><a href="#api-howmuchread-scrollto"><h3 id="api-howmuchread-scrollto">.howmuchread('scrollTo', count[, options])</h3></a><p>Scroll the parent element to the count-th character exists.</p><h4>Options</h4><p>Available options are the same with .howmuchread()</p><h4>Example</h4><pre>// Scroll window to the 1000th character of the document
+</pre><a href="#api-howmuchread-getlength"><h3 id="api-howmuchread-getlength">.howmuchread('getLength')</h3></a><p>Returns the element's full character count which is compatible with jQuery.howmuchread()</p><a href="#api-howmuchread-scrollto"><h3 id="api-howmuchread-scrollto">.howmuchread('scrollTo', count[, options])</h3></a><p>Scroll the parent element to the count-th character exists.</p><h4>Options</h4><p>The same options with .howmuchread() and some additionals are available.</p><dl><dt>noScroll</dt><dd>(Default: false) Set true not to actually perform scroll, just simulate.
+Much like good if combined with getMetric option.</dd></dl><h4>Example</h4><pre>// Scroll window to the 1000th character of the document
 $('body').howmuchread('scrollTo', 1000, {
 	parent: window
 });

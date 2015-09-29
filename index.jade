@@ -308,7 +308,12 @@ html
 				h3#api-howmuchread-scrollto .howmuchread('scrollTo', count[, options])
 			p Scroll the parent element to the count-th character exists.
 			h4 Options
-			p Available options are the same with .howmuchread()
+			p The same options with .howmuchread() and some additionals are available.
+			dl
+				dt noScroll
+				dd.
+					(Default: false) Set true not to actually perform scroll, just simulate.
+					Much like good if combined with getMetric option.
 			h4 Example
 			pre.
 				// Scroll window to the 1000th character of the document

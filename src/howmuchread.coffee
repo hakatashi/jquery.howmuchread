@@ -76,6 +76,8 @@ howmuchread.scrollTo = (N, options) ->
     baseline: 'before'
     borderline: 'before'
     wrapperId: 'howmuchread-wrapper'
+    getMetric: false
+    noScroll: false
     writingMode: {}
 
   # Extend defaults to options
@@ -98,19 +100,26 @@ howmuchread.scrollTo = (N, options) ->
   targetOffset = getOffset $("span##{settings.wrapperId}"), writingMode
   unwrapCharacter $(this), settings.wrapperId
 
-  # Convert settings.baseline to numeral baseline value
-  baseline = getBorderValue targetOffset, settings.baseline
+  if not settings.noScroll
+    # Convert settings.baseline to numeral baseline value
+    baseline = getBorderValue targetOffset, settings.baseline
 
-  if writingMode.horizontal
-    if writingMode.ttb
-      $parent.scrollTop $parent.scrollTop() + (baseline - borderline)
+    if writingMode.horizontal
+      if writingMode.ttb
+        $parent.scrollTop $parent.scrollTop() + (baseline - borderline)
+      else
+        $parent.scrollTop $parent.scrollTop() - (baseline - borderline)
     else
-      $parent.scrollTop $parent.scrollTop() - (baseline - borderline)
+      if writingMode.rtl
+        scrollLeft.call settings.parent, scrollLeft.call(settings.parent, undefined, writingMode) - (baseline - borderline), writingMode
+      else
+        scrollLeft.call settings.parent, scrollLeft.call(settings.parent, undefined, writingMode) + (baseline - borderline), writingMode
+
+  if settings.getMetric
+    targetOffset.position = N
+    return targetOffset
   else
-    if writingMode.rtl
-      scrollLeft.call settings.parent, scrollLeft.call(settings.parent, undefined, writingMode) - (baseline - borderline), writingMode
-    else
-      scrollLeft.call settings.parent, scrollLeft.call(settings.parent, undefined, writingMode) + (baseline - borderline), writingMode
+    return $(this)
 
 howmuchread.getLength = ->
   textNodes = getTextNodes $ this

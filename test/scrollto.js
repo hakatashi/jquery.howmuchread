@@ -58,4 +58,22 @@
     this.$markup.howmuchread('scrollTo', 499);
     ok(Math.abs(this.$markup.scrollTop() - 270) <= 5);
   });
+
+  test('options.noScroll prevents scroll, just simulate.', function () {
+    this.$element.howmuchread('scrollTo', 0, {noScroll: true});
+    equal(this.$element.scrollTop(), 0);
+
+    this.$element.howmuchread('scrollTo', 100, {noScroll: true});
+    equal(this.$element.scrollTop(), 0);
+
+    this.$element.howmuchread('scrollTo', 499, {noScroll: true});
+    equal(this.$element.scrollTop(), 0);
+  });
+
+  test('options.getMetric returns metric object.', function () {
+    var metric;
+
+    metric = this.$element.howmuchread('scrollTo', 0, {getMetric: true});
+    equal(typeof metric, 'object');
+  });
 }(jQuery));

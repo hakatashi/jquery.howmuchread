@@ -86,21 +86,26 @@ parseWritingMode = ->
 # Convert position value to numeral value
 # returned value lies in same metrics with offset.before
 getBorderValue = (offset, position) ->
-  if position is 'before'
-    offset.before
-  else if position is 'after'
-    offset.before + offset.blockSize
-  else if position is 'center'
-    offset.before + offset.blockSize / 2
-  else if position is 'scroll'
-    if offset.scroll is null
-      offset.before + offset.blockSize
+  switch typeof position
+    when 'string'
+      switch position
+        when 'before'
+          offset.before
+        when 'after'
+          offset.before + offset.blockSize
+        when 'center'
+          offset.before + offset.blockSize / 2
+        when 'scroll'
+          if offset.scroll is null
+            offset.before + offset.blockSize
+          else
+            offset.before + offset.blockSize * offset.scroll
+
+    when 'number'
+      offset.before + offset.blockSize * position
+
     else
-      offset.before + offset.blockSize * offset.scroll
-  else if typeof position is 'number'
-    offset.before + offset.blockSize * position
-  else
-    throw new TypeError 'howmuchread: position must be string or number'
+      throw new TypeError 'howmuchread: position must be string or number'
 
 # scrollLeft with support for RTL
 scrollLeft = (value, writingMode) ->

@@ -100,12 +100,24 @@ getBorderValue = (offset, position) ->
             offset.before + offset.blockSize
           else
             offset.before + offset.blockSize * offset.scroll
+        else
+          throw new TypeError 'howmuchread: Unknown position type'
+
+    when 'object'
+      switch position.unit
+        when '%'
+          offset.before + offset.blockSize * position.value / 100
+        when 'px'
+          offset.before + position.value
+        else
+          throw new TypeError 'howmuchread: Unknown position.unit type'
 
     when 'number'
+      console.error 'howmuchread: Specifying position by number is deprecated. Use {value: ..., unit: "%"} instead.'
       offset.before + offset.blockSize * position
 
     else
-      throw new TypeError 'howmuchread: position must be string or number'
+      throw new TypeError 'howmuchread: Position must be string or number'
 
 # scrollLeft with support for RTL
 scrollLeft = (value, writingMode) ->

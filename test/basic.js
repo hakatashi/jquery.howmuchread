@@ -136,4 +136,36 @@
     this.$section.scrollTop(500);
     strictEqual($section.howmuchread({parent: this.$section}), 500, 'should be read over');
   });
+
+  test('works good of borderline option', function () {
+    var chars;
+
+    this.$element.scrollTop(100);
+
+    // before
+    chars = this.$element.howmuchread({borderline: 'before'});
+    strictEqual(chars, 200, 'should be on line 4');
+
+    // after
+    chars = this.$element.howmuchread({borderline: 'after'});
+    strictEqual(chars, 350, 'should be on line 7');
+
+    // center
+    chars = this.$element.howmuchread({borderline: 'center'});
+    strictEqual(chars, 250, 'should be on line 5');
+
+    // scroll
+    // height = 100, scrollHeight = 800, scrollable margin = 700, calculated borderline offset = 114
+    chars = this.$element.howmuchread({borderline: 'scroll'});
+    strictEqual(chars, 200, 'should be on line 4');
+
+    // percentage
+    // calculated borderline offset = 130
+    chars = this.$element.howmuchread({borderline: {value: 30, unit: '%'}});
+    strictEqual(chars, 250, 'should be on line 5');
+
+    // absolute
+    chars = this.$element.howmuchread({borderline: {value: 80, unit: 'px'}});
+    strictEqual(chars, 300, 'should be on line 6');
+  });
 }(jQuery));

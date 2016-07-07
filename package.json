@@ -28,7 +28,7 @@
     "grunt-contrib-uglify": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-qunit-istanbul": "^0.6.0",
-    "grunt-saucelabs": "^8.6.1",
+    "grunt-saucelabs": "^9.0.0",
     "jshint-stylish": "^2.1.0",
     "load-grunt-tasks": "^3.4.0",
     "time-grunt": "^1.0.0"

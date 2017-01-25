@@ -1,5 +1,7 @@
 # jQuery.howmuchread [![Build Status][travis-image]][travis-url] [![Bower][bower-image]][bower-url] [![Coverage Status][coveralls-image]][coveralls-url]
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/hakatashi/jquery.howmuchread.svg)](https://greenkeeper.io/)
+
 > Answers your fancy questions such as "How many characters I scrolled?"
 
 [travis-url]: https://travis-ci.org/hakatashi/jquery.howmuchread
